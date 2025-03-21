@@ -1,0 +1,56 @@
+# depslib dependency file v1.0
+1742480765 source:d:\study\fisher\sdl_game\generate.cpp
+
+1742491720 source:d:\study\fisher\sdl_game\hook.cpp
+	"hook.h"
+	<cmath>
+	<iostream>
+
+1742490308 d:\study\fisher\sdl_game\hook.h
+	<SDL.h>
+
+1742497264 source:d:\study\fisher\sdl_game\texturemanager.cpp
+	"texturemanager.h"
+
+1742483068 d:\study\fisher\sdl_game\texturemanager.h
+	<SDL.h>
+	<SDL_image.h>
+	<string>
+	<map>
+
+1742497307 source:d:\study\fisher\sdl_game\creature.cpp
+	"creature.h"
+	<cstdlib>
+
+1742495458 d:\study\fisher\sdl_game\creature.h
+	<SDL.h>
+	"texturemanager.h"
+
+1742496004 source:d:\study\fisher\sdl_game\main.cpp
+	"game.h"
+	<iostream>
+
+1742483338 d:\study\fisher\sdl_game\game.h
+	<SDL.h>
+	<SDL_image.h>
+	<vector>
+	<string>
+	"hook.h"
+	"creature.h"
+	"mussel.h"
+	"texturemanager.h"
+
+1742483274 d:\study\fisher\sdl_game\mussel.h
+	<SDL.h>
+	"texturemanager.h"
+
+1742483311 source:d:\study\fisher\sdl_game\mussel.cpp
+	"mussel.h"
+
+1742495548 source:d:\study\fisher\sdl_game\game.cpp
+	"game.h"
+	<ctime>
+	<cstdlib>
+	<iostream>
+	<sstream>
+
