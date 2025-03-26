@@ -11,16 +11,17 @@ Mussel::Mussel(TextureManager* textureManager) :
 
 Mussel::~Mussel() {}
 
-void Mussel::init(int x, int y, int w, int h, int val) {
+void Mussel::init(int x, int y, int w, int h, int val, string path) {
     g_rect = {x, y, w, h};
     g_value = val;
+    g_path = path;
     g_collected = false;
 }
 
 void Mussel::render(SDL_Renderer* renderer) {
     if (!g_collected) {
         // Sử dụng texture nếu có, hoặc vẽ hình chữ nhật
-        g_textureManager->draw("mussel", g_rect.x, g_rect.y, g_rect.w, g_rect.h, renderer);
+        g_textureManager->draw(g_path, g_rect.x, g_rect.y, g_rect.w, g_rect.h, renderer);
     }
 }
 

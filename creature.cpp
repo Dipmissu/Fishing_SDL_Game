@@ -1,54 +1,63 @@
 // creature.cpp
 #include "creature.h"
+#include "constants.h"
 #include <cstdlib>
 
+using namespace std;
+
 Creature::Creature(TextureManager* textureManager) :
-    g_speed(1.5f),
-    g_visible(false),
+    g_value(0),
+    g_collected(false),
+    g_facingRight(true),
     g_textureManager(textureManager),
-    g_frameCount(6),
+    g_frameCount(FRAME_COUNT),
     g_currentFrame(0),
     g_frameTime(0),
-    g_frameDelay(1.0f){
-
-    g_rect = {0, 0, 48, 48};
+    g_frameDelay(FRAME_DELAY){
+        g_speed = rand() % 2 + 1;
 }
 
 Creature::~Creature() {
-    // Không hủy textureManager vì nó thuộc quản lý bên ngoài
 }
 
-void Creature::init(int frameCount) {
-    g_frameCount = frameCount;
-    g_frameDelay = 1.0f;
+void Creature::init(int x,int y, string path, int value) {
+    g_rect = {x, y, CREATURE_RADIUS, CREATURE_RADIUS};
+    g_path = path;
+    g_value = value;
+    g_collected = false;
+}
+void Creature::collect() {
+    g_collected = true;
 }
 
 void Creature::update(float deltaTime, int screenWidth, int screenHeight) {
     // Cập nhật animation
-    g_frameTime += deltaTime * 4;
-    if (g_frameTime >= g_frameDelay) {
-        g_frameTime = 0;
-        g_currentFrame = (g_currentFrame + 1) % g_frameCount;
-    }
+    if(!g_collected){
+        g_frameTime += deltaTime * 5;
+        if (g_frameTime >= g_frameDelay) {
+            g_frameTime = 0;
+            g_currentFrame = (g_currentFrame + 1) % g_frameCount;
+        }
 
-    if (!g_visible && (std::rand() / (float)RAND_MAX) < 0.01f) {  // Xác suất chính xác hơn
-        g_visible = true;
-        g_rect.x = -10;
-        g_rect.y = 50 + std::rand() % (screenHeight - 400) + 300;  // Giới hạn tránh ra khỏi màn hình
-    }
+        g_rect.x += (g_facingRight ? g_speed : -g_speed);
 
-    // Di chuyển nếu hiển thị
-    if (g_visible) {
-        g_rect.x += g_speed;
-        if (g_rect.x > screenWidth + 50) {
-            g_visible = false;
+        if (g_rect.x <= 0 || g_rect.x >= screenWidth - CREATURE_RADIUS) {
+            g_facingRight = !g_facingRight;
+        }
+    }
+}
+void Creature::render(SDL_Renderer* renderer) {
+    if (!g_collected) {
+        if(g_facingRight){
+            g_textureManager->drawFrame(g_path, g_rect.x, g_rect.y, g_rect.w, g_rect.h, 0, g_currentFrame, renderer);
+        }
+        else{
+            g_textureManager->drawFrame(g_path, g_rect.x, g_rect.y, g_rect.w, g_rect.h, 0, g_currentFrame, renderer,SDL_FLIP_HORIZONTAL);
         }
     }
 }
 
-void Creature::render(SDL_Renderer* renderer) {
-    if (g_visible) {
-        g_textureManager->drawFrame("creature", g_rect.x, g_rect.y, g_rect.w, g_rect.h,
-                                    0, g_currentFrame, renderer);
-    }
+void Creature::setPosition(int x, int y) {
+    g_rect.x = x;
+    g_rect.y = y;
 }

@@ -2,6 +2,9 @@
 #pragma once
 
 #include <SDL.h>
+#include <string>
+
+using namespace std;
 
 class Hook {
 private:
@@ -11,9 +14,10 @@ private:
     bool g_extending;
     double g_length;
     double g_speed;
-    bool g_attached;
+    bool g_attachedMussel;
+    bool g_attachedCreature;
     bool g_movingLeft;
-    int g_attachedGoldIndex;
+    int g_attachedObjectIndex;
     bool g_returned;
 
 public:
@@ -25,12 +29,13 @@ public:
 
     void startExtend();
     void startRetract();
-    void attachGold(int index, int goldSize);
-    void detachGold();
+    void attachObject(int index, int ObjectSize, string id);
+    void detachObject(string id);
 
     bool isExtending() const { return g_extending; }
-    bool isAttached() const { return g_attached; }
+    bool isAttachedMussel() const { return g_attachedMussel; }
+    bool isAttachedCreature() const { return g_attachedCreature; }
     bool hasReturned() const { return g_returned; }
-    int getAttachedGoldIndex() const { return g_attachedGoldIndex; }
+    int getAttachedObjectIndex() const { return g_attachedObjectIndex; }
     SDL_Point getTipPosition() const { return g_tip; }
 };

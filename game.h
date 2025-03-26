@@ -10,6 +10,8 @@
 #include "mussel.h"
 #include "texturemanager.h"
 
+using namespace std;
+
 class Game {
 private:
     SDL_Window* g_window;
@@ -25,9 +27,8 @@ private:
 
     // Các đối tượng game
     Hook* g_hook;
-    Creature* g_creature;
-    //std::vector<Creature*> g_creature;
-    std::vector<Mussel*> g_goldItems;
+    vector<Creature*> g_creatures;
+    vector<Mussel*> g_mussel;
 
     // Texture manager
     TextureManager* g_textureManager;
@@ -36,8 +37,9 @@ public:
     Game();
     ~Game();
 
-    bool init(const std::string& title, int width, int height);
-    void createGoldItems();
+    bool init(const string& title, int width, int height);
+    void createMussel();
+    void createCreatures();
     void handleEvents();
     void update();
     void render();

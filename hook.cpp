@@ -1,16 +1,21 @@
 // hook.cpp
 #include "hook.h"
+#include "constants.h"
 #include <cmath>
 #include <iostream>
+#include <string>
+
+using namespace std;
 
 Hook::Hook(int x, int y) :
-    g_angle(180.0),
+    g_angle(ANGLE),
     g_extending(false),
-    g_length(10.0),
-    g_speed(5.0),
+    g_length(HOOK_LENGTH),
+    g_speed(HOOK_SPEED),
     g_movingLeft(false),
-    g_attached(false),
-    g_attachedGoldIndex(-1),
+    g_attachedMussel(false),
+    g_attachedCreature(false),
+    g_attachedObjectIndex(-1),
     g_returned(false) {
 
     g_base = {x - 5, y - 10, 10, 20};
@@ -80,17 +85,27 @@ void Hook::startRetract() {
 }
 
 
-void Hook::attachGold(int index, int goldSize) {
-    g_attached = true;
-    g_attachedGoldIndex = index;
+void Hook::attachObject(int index, int ObjectSize, string id) {
+    if(id == "mussel"){
+        g_attachedMussel = true;
+    }
+    else if(id == "creature"){
+        g_attachedCreature = true;
+    }
+    g_attachedObjectIndex = index;
 
     // Điều chỉnh tốc độ kéo về dựa trên kích thước vàng
-    g_speed = 3.0 / (goldSize / 20.0);
+    g_speed = 3.0 / (ObjectSize / 20.0);
     if (g_speed > 0) g_speed = -g_speed; // Đảm bảo tốc độ âm để kéo về
 }
 
-void Hook::detachGold() {
-    g_attached = false;
-    g_attachedGoldIndex = -1;
+void Hook::detachObject(string id) {
+    if(id == "mussel"){
+        g_attachedMussel = false;
+    }
+    else if(id == "creature"){
+        g_attachedCreature = false;
+    }
+    g_attachedObjectIndex = -1;
     g_speed = 5.0; // Reset tốc độ
 }

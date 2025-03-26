@@ -1,12 +1,15 @@
 // main.cpp
 #include "game.h"
+#include "constants.h"
 #include <iostream>
+
+using namespace std;
 
 int main(int argc, char* argv[]) {
     Game game;
 
-    if (!game.init("Fishing Game", 800, 600)) {
-        std::cerr << "Failed to initialize game!" << std::endl;
+    if (!game.init(TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)) {
+        cerr << "Failed to initialize game!" << endl;
         return 1;
     }
 

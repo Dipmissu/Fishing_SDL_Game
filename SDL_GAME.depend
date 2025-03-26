@@ -1,36 +1,42 @@
 # depslib dependency file v1.0
-1742480765 source:d:\study\fisher\sdl_game\generate.cpp
+1742565667 source:d:\study\fisher\sdl_game\generate.cpp
 
-1742491720 source:d:\study\fisher\sdl_game\hook.cpp
+1742811602 source:d:\study\fisher\sdl_game\hook.cpp
 	"hook.h"
+	"constants.h"
 	<cmath>
 	<iostream>
+	<string>
 
-1742490308 d:\study\fisher\sdl_game\hook.h
+1742742696 d:\study\fisher\sdl_game\hook.h
 	<SDL.h>
+	<string>
 
-1742497264 source:d:\study\fisher\sdl_game\texturemanager.cpp
+1742565668 source:d:\study\fisher\sdl_game\texturemanager.cpp
 	"texturemanager.h"
 
-1742483068 d:\study\fisher\sdl_game\texturemanager.h
+1742565668 d:\study\fisher\sdl_game\texturemanager.h
 	<SDL.h>
 	<SDL_image.h>
 	<string>
 	<map>
 
-1742497307 source:d:\study\fisher\sdl_game\creature.cpp
+1742811054 source:d:\study\fisher\sdl_game\creature.cpp
 	"creature.h"
+	"constants.h"
 	<cstdlib>
 
-1742495458 d:\study\fisher\sdl_game\creature.h
+1742811054 d:\study\fisher\sdl_game\creature.h
 	<SDL.h>
+	<string>
 	"texturemanager.h"
 
-1742496004 source:d:\study\fisher\sdl_game\main.cpp
+1742743759 source:d:\study\fisher\sdl_game\main.cpp
 	"game.h"
+	"constants.h"
 	<iostream>
 
-1742483338 d:\study\fisher\sdl_game\game.h
+1742617253 d:\study\fisher\sdl_game\game.h
 	<SDL.h>
 	<SDL_image.h>
 	<vector>
@@ -40,17 +46,21 @@
 	"mussel.h"
 	"texturemanager.h"
 
-1742483274 d:\study\fisher\sdl_game\mussel.h
+1742746146 d:\study\fisher\sdl_game\mussel.h
 	<SDL.h>
+	<string>
 	"texturemanager.h"
 
-1742483311 source:d:\study\fisher\sdl_game\mussel.cpp
+1742746159 source:d:\study\fisher\sdl_game\mussel.cpp
 	"mussel.h"
 
-1742495548 source:d:\study\fisher\sdl_game\game.cpp
+1742888458 source:d:\study\fisher\sdl_game\game.cpp
 	"game.h"
+	"constants.h"
 	<ctime>
 	<cstdlib>
 	<iostream>
 	<sstream>
+
+1742888389 d:\study\fisher\sdl_game\constants.h
 
