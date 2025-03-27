@@ -18,23 +18,23 @@ Hook::Hook(int x, int y) :
     g_attachedObjectIndex(-1),
     g_returned(false) {
 
-    g_base = {x - 5, y - 10, 10, 20};
-    g_tip = {x, y + 10};
+    g_base = {x, y, 120, 120};
+    g_tip = {x, y};
 }
 
 Hook::~Hook() {}
 
-void Hook::update(float deltaTime) {
+void Hook::update() {
     if (!g_extending) {
         g_returned = true;
         if (g_movingLeft) {
-            g_angle += 60.0 * deltaTime;
-            if (g_angle >= 180.0) {
+            g_angle += 1;
+            if (g_angle >= 150) {
                 g_movingLeft = false;
             }
         } else {
-            g_angle -= 60.0 * deltaTime;
-            if (g_angle <= 0) {
+            g_angle -= 1;
+            if (g_angle <= 30) {
                 g_movingLeft = true;
             }
         }
@@ -42,33 +42,27 @@ void Hook::update(float deltaTime) {
         g_returned = false;
         g_length += g_speed;
 
-        if (g_length <= 10.0) {
+        if (g_length <= HOOK_LENGTH) {
             g_extending = false;
-            g_length = 10.0;
+            g_length = HOOK_LENGTH;
             g_returned = true;
             g_speed = 5.0;
         }
     }
     // Tính toán vị trí mũi cần câu
-    g_tip.x = g_base.x + g_base.w/2 + static_cast<int>(g_length * std::cos(g_angle * M_PI / 180.0));
-    g_tip.y = g_base.y + g_base.h + static_cast<int>(g_length * std::sin(g_angle * M_PI / 180.0));
+    g_tip.x = g_base.x + g_base.w/2 + static_cast<int>(g_length * cos(g_angle * M_PI / 180.0));
+    g_tip.y = g_base.y + g_base.h - 100 + static_cast<int>(g_length * sin(g_angle * M_PI / 180.0));
 }
 
 void Hook::render(SDL_Renderer* renderer) {
-    // Vẽ đế cần câu
-    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Màu nâu
-    SDL_RenderFillRect(renderer, &g_base);
 
     // Vẽ dây câu
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Màu đen
     SDL_RenderDrawLine(renderer,
                       g_base.x + g_base.w/2,
-                      g_base.y + g_base.h,
+                      g_base.y + g_base.h - 100,
                       g_tip.x, g_tip.y);
 
-    // Vẽ mũi cần câu
-    SDL_Rect hook = {g_tip.x - 3, g_tip.y - 3, 6, 6};
-    SDL_RenderFillRect(renderer, &hook);
 }
 
 void Hook::startExtend() {
@@ -94,7 +88,7 @@ void Hook::attachObject(int index, int ObjectSize, string id) {
     }
     g_attachedObjectIndex = index;
 
-    // Điều chỉnh tốc độ kéo về dựa trên kích thước vàng
+    // Điều chỉnh tốc độ kéo về dựa trên kích thước vật
     g_speed = 3.0 / (ObjectSize / 20.0);
     if (g_speed > 0) g_speed = -g_speed; // Đảm bảo tốc độ âm để kéo về
 }

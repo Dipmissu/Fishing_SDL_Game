@@ -60,35 +60,43 @@ bool Game::init(const string& title, int width, int height) {
 
     // Tải các texture
     if (!g_textureManager->loadTexture("creature_1", "D:/STUDY/FISHER/SDL_GAME/image/creature_1.png", g_renderer)) {
-        cerr << "Failed to load mouse texture!" << endl;
+        cerr << "Failed to load creature_1 texture!" << endl;
     }
 
     if (!g_textureManager->loadTexture("creature_2", "D:/STUDY/FISHER/SDL_GAME/image/creature_2.png", g_renderer)) {
-        cerr << "Failed to load mouse texture!" << endl;
+        cerr << "Failed to load creature_2 texture!" << endl;
     }
 
     if (!g_textureManager->loadTexture("creature_3", "D:/STUDY/FISHER/SDL_GAME/image/creature_3.png", g_renderer)) {
-        cerr << "Failed to load mouse texture!" << endl;
+        cerr << "Failed to load creature_3 texture!" << endl;
     }
 
     if (!g_textureManager->loadTexture("starfish", "D:/STUDY/FISHER/SDL_GAME/image/starfish.png", g_renderer)) {
-        cerr << "Failed to load mouse texture!" << endl;
+        cerr << "Failed to load starfish texture!" << endl;
     }
 
     if (!g_textureManager->loadTexture("treasure", "D:/STUDY/FISHER/SDL_GAME/image/treasure.png", g_renderer)) {
-        cerr << "Failed to load mouse texture!" << endl;
+        cerr << "Failed to load treasure texture!" << endl;
     }
 
     if (!g_textureManager->loadTexture("mussel","D:/STUDY/FISHER/SDL_GAME/image/mussel.png", g_renderer)) {
-        cerr << "Failed to load gold texture!" << endl;
+        cerr << "Failed to load mussel texture!" << endl;
     }
 
     if (!g_textureManager->loadTexture("background", "D:/STUDY/FISHER/SDL_GAME/image/background.png", g_renderer)) {
         cerr << "Failed to load background texture!" << endl;
     }
 
+    if (!g_textureManager->loadTexture("fisher", "D:/STUDY/FISHER/SDL_GAME/image/fisher.png", g_renderer)) {
+        cerr << "Failed to load fisher texture!" << endl;
+    }
+
+    if (!g_textureManager->loadTexture("hook", "D:/STUDY/FISHER/SDL_GAME/image/hook.png", g_renderer)) {
+        cerr << "Failed to load hook texture!" << endl;
+    }
+
     // Khởi tạo hook
-    g_hook = new Hook(g_screenWidth / 2,FISHER_DISTANT);
+    g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT);
 
     // Khởi tạo sinh vật
     createCreatures();
@@ -199,7 +207,7 @@ void Game::update() {
     }
 
     // Cập nhật hook
-    g_hook->update(deltaTime);
+    g_hook->update();
 
     // Kiểm tra va chạm với trai
     if (g_hook->isExtending() && !g_hook->isAttachedCreature() && !g_hook->isAttachedMussel()) {
@@ -285,7 +293,10 @@ void Game::render() {
     // Vẽ nền
     g_textureManager->draw("background",0,0,g_screenWidth,g_screenHeight,g_renderer);
 
-    // Vẽ các vật phẩm vàng
+    // Vẽ người câu cá
+    g_textureManager->draw("fisher",g_screenWidth / 2 - FISHER_WIDTH / 2 - 44,FISHER_DISTANT,FISHER_WIDTH,FISHER_HEIGHT,g_renderer);
+
+    // Vẽ tĩnh vật
     for (auto& mussel : g_mussel) {
         mussel->render(g_renderer);
     }
@@ -297,6 +308,8 @@ void Game::render() {
 
     // Vẽ hook
     g_hook->render(g_renderer);
+    SDL_Point hookTip = g_hook->getTipPosition();
+    g_textureManager->drawhook("hook",hookTip.x,hookTip.y, HOOK_WIDTH, HOOK_WIDTH,g_hook->isExtending(),g_renderer);
 
     // Hiển thị điểm số và thời gian
     stringstream scoreText;

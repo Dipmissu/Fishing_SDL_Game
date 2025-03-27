@@ -24,7 +24,7 @@ public:
     Hook(int x, int y);
     ~Hook();
 
-    void update(float deltaTime);
+    void update();
     void render(SDL_Renderer* renderer);
 
     void startExtend();
@@ -37,5 +37,6 @@ public:
     bool isAttachedCreature() const { return g_attachedCreature; }
     bool hasReturned() const { return g_returned; }
     int getAttachedObjectIndex() const { return g_attachedObjectIndex; }
+    double getAngle() const {return g_angle;}
     SDL_Point getTipPosition() const { return g_tip; }
 };

@@ -6,6 +6,8 @@
 #include <string>
 #include <map>
 
+using namespace std;
+
 class TextureManager {
 private:
     std::map<std::string, SDL_Texture*> g_textureMap;
@@ -14,10 +16,12 @@ public:
     TextureManager();
     ~TextureManager();
 
-    bool loadTexture(const std::string& id, const std::string& path, SDL_Renderer* renderer);
-    void draw(const std::string& id, int x, int y, int width, int height,
+    bool loadTexture(const string& id, const string& path, SDL_Renderer* renderer);
+    void draw(const string& id, int x, int y, int width, int height,
               SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE);
-    void drawFrame(const std::string& id, int x, int y, int width, int height,
+    void drawhook(const string& id, int x, int y, int width, int height,  bool extending,
+                  SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE);
+    void drawFrame(const string& id, int x, int y, int width, int height,
                    int currentRow, int currentFrame, SDL_Renderer* renderer,
                    SDL_RendererFlip flip = SDL_FLIP_NONE);
     void clean();

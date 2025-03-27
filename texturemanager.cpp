@@ -1,5 +1,11 @@
 // texturemanager.cpp
 #include "texturemanager.h"
+#include "constants.h"
+
+using namespace std;
+
+double g_angle = 60;
+bool g_movingLeft = false;
 
 TextureManager::TextureManager() {}
 
@@ -7,7 +13,7 @@ TextureManager::~TextureManager() {
     clean();
 }
 
-bool TextureManager::loadTexture(const std::string& id, const std::string& path, SDL_Renderer* renderer) {
+bool TextureManager::loadTexture(const string& id, const string& path, SDL_Renderer* renderer) {
     SDL_Surface* tempSurface = IMG_Load(path.c_str());
     if (!tempSurface) {
         return false;
@@ -24,21 +30,40 @@ bool TextureManager::loadTexture(const std::string& id, const std::string& path,
     return true;
 }
 
-void TextureManager::draw(const std::string& id, int x, int y, int width, int height,
+void TextureManager::draw(const string& id, int x, int y, int width, int height,
                           SDL_Renderer* renderer, SDL_RendererFlip flip) {
-    //SDL_Rect srcRect = {0, 0, width, height};
     SDL_Rect destRect = {x, y, width, height};
 
     if (g_textureMap.find(id) != g_textureMap.end()) {
         SDL_RenderCopyEx(renderer, g_textureMap[id], NULL, &destRect, 0, nullptr, flip);
-    } else {
-        // Vẽ hình chữ nhật đơn giản nếu không tìm thấy texture
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(renderer, &destRect);
     }
 }
 
-void TextureManager::drawFrame(const std::string& id, int x, int y, int width, int height,
+void TextureManager::drawhook(const string& id, int x, int y, int width, int height, bool extending,
+                          SDL_Renderer* renderer, SDL_RendererFlip flip) {
+    SDL_Point rotationPoint = {0, 0};
+    SDL_Rect destRect = {x, y, width, height};
+    if(!extending){
+        if (g_movingLeft) {
+            g_angle += 1;
+            if (g_angle >= 60) {
+                g_movingLeft = false;
+            }
+        }
+        else {
+            g_angle -= 1;
+            if (g_angle <= -60) {
+                g_movingLeft = true;
+            }
+        }
+    }
+
+    if (g_textureMap.find(id) != g_textureMap.end()) {
+        SDL_RenderCopyEx(renderer, g_textureMap[id], NULL, &destRect,g_angle, &rotationPoint, flip);
+    }
+}
+
+void TextureManager::drawFrame(const string& id, int x, int y, int width, int height,
                               int currentRow, int currentFrame, SDL_Renderer* renderer,
                               SDL_RendererFlip flip) {
     SDL_Rect srcRect = {width * currentFrame, height * currentRow, width, height};
@@ -46,10 +71,6 @@ void TextureManager::drawFrame(const std::string& id, int x, int y, int width, i
 
     if (g_textureMap.find(id) != g_textureMap.end()) {
         SDL_RenderCopyEx(renderer, g_textureMap[id], &srcRect, &destRect, 0, nullptr, flip);
-    } else {
-        // Vẽ hình chữ nhật đơn giản nếu không tìm thấy texture
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(renderer, &destRect);
     }
 }
 
