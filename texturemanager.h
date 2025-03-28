@@ -10,7 +10,7 @@ using namespace std;
 
 class TextureManager {
 private:
-    std::map<std::string, SDL_Texture*> g_textureMap;
+    map<string, SDL_Texture*> g_textureMap;
 
 public:
     TextureManager();

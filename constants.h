@@ -2,7 +2,7 @@
 #define CONSTANTS_H
 
 // game
-const int TIME = 6000;
+const int TIME = 7200;
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const string TITLE = "Fishing Game!";
@@ -33,6 +33,9 @@ const int BOARD_HEIGHT = 40;
 
 // coin
 const int COIN_RADIUS = 20;
+
+// time
+const int TIMER_RADIUS = 20;
 
 // font
 const int FONT_SIZE = 18;

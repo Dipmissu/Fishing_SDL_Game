@@ -20,6 +20,7 @@ Game::Game() :
     g_screenHeight(SCREEN_HEIGHT),
     g_hook(nullptr),
     g_score(nullptr),
+    g_time(nullptr),
     g_textureManager(nullptr),
     g_textRenderer(nullptr) {
     srand(static_cast<unsigned int>(time(nullptr)));
@@ -73,6 +74,9 @@ bool Game::init(const string& title, int width, int height) {
     // Khởi tạo score
     g_score = new Score(g_textureManager,g_textRenderer);
 
+    // Khởi tạo time
+    g_time = new Time(g_textureManager,g_textRenderer);
+
     // Tải các texture
     if (!g_textureManager->loadTexture("creature_1", "image/creature_1.png", g_renderer)) {
         cerr << "Failed to load creature_1 texture!" << endl;
@@ -116,6 +120,10 @@ bool Game::init(const string& title, int width, int height) {
 
     if (!g_textureManager->loadTexture("coin", "image/coin.png", g_renderer)) {
         cerr << "Failed to load coin texture!" << endl;
+    }
+
+    if (!g_textureManager->loadTexture("time", "image/time.png", g_renderer)) {
+        cerr << "Failed to load time texture!" << endl;
     }
 
     // Khởi tạo hook
@@ -211,22 +219,14 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
-    Uint32 currentTime = SDL_GetTicks();
-    float deltaTime = (currentTime - g_lastTime) / 1000.0f;
-    g_lastTime = currentTime;
 
-    // Giảm thời gian
-    g_timeLeft -= deltaTime;
-    if (g_timeLeft <= 0) {
-        g_timeLeft = 0;
-        // Game over logic
-        cout << "Game Over! Final Score: " << g_score << endl;
-        g_isRunning = false;
-    }
+    g_time->update();
+
+    g_isRunning = g_time->isRunning();
 
     // Cập nhật sinh vật
     for(auto& creature : g_creatures){
-        creature->update(deltaTime, g_screenWidth, g_screenHeight);
+        creature->update(g_screenWidth, g_screenHeight);
     }
 
     // Cập nhật hook
@@ -338,17 +338,7 @@ void Game::render() {
 
     g_score->render(g_renderer);
 
-    /*stringstream scoreText;
-    scoreText << "Score: " << g_score;
-
-    std::stringstream timeText;
-    timeText << "Time: " << static_cast<int>(g_timeLeft);*/
-
-    // Hiển thị văn bản (giả lập)
-    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
-
-    SDL_Rect timeRect = {g_screenWidth - 110, 10, 100, 20};
-    SDL_RenderDrawRect(g_renderer, &timeRect);
+    g_time->render(g_renderer);
 
     // Hiển thị màn hình
     SDL_RenderPresent(g_renderer);

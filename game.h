@@ -9,6 +9,7 @@
 #include "creature.h"
 #include "mussel.h"
 #include "score.h"
+#include "time.h"
 #include "texturemanager.h"
 #include "textrenderer.h"
 
@@ -35,6 +36,7 @@ private:
     TextureManager* g_textureManager;
     TextRenderer* g_textRenderer;
     Score* g_score;
+    Time* g_time;
 
 public:
     Game();

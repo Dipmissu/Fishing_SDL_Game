@@ -47,6 +47,8 @@
 		<Unit filename="textrenderer.cpp" />
 		<Unit filename="textrenderer.h" />
 		<Unit filename="texturemanager.cpp" />
+		<Unit filename="time.cpp" />
+		<Unit filename="time.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

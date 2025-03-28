@@ -28,7 +28,7 @@ public:
     ~Creature();
 
     void init(int x, int y, string path, int value);
-    void update(float deltaTime, int screenWidth, int screenHeight);
+    void update(int screenWidth, int screenHeight);
     void render(SDL_Renderer* renderer);
     void collect();
     void setPosition(int x, int y);

@@ -31,10 +31,10 @@ void Creature::collect() {
     g_collected = true;
 }
 
-void Creature::update(float deltaTime, int screenWidth, int screenHeight) {
+void Creature::update( int screenWidth, int screenHeight) {
     // Cập nhật animation
     if(!g_collected){
-        g_frameTime += deltaTime * 5;
+        g_frameTime += 0.1;
         if (g_frameTime >= g_frameDelay) {
             g_frameTime = 0;
             g_currentFrame = (g_currentFrame + 1) % g_frameCount;

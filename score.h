@@ -18,7 +18,7 @@ public:
 
     void addPoints(int points);
     void reset();
-    int getScore() const;
+    int getScore() const {return score;}
     void render(SDL_Renderer* renderer);
 };
 
