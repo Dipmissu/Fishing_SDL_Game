@@ -262,6 +262,7 @@ void Game::update() {
     // Kiểm tra hook chạm đáy màn hình
     if (g_hook->isExtending() && !g_hook->isAttachedMussel() && !g_hook->isAttachedCreature() &&
         (g_hook->getTipPosition().y >= g_screenHeight || g_hook->getTipPosition().x >= g_screenWidth || g_hook->getTipPosition().x <= 0)) {
+        g_score->addPoints(-100);
         g_hook->startRetract();
 
     }

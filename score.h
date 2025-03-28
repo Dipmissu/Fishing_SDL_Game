@@ -10,6 +10,8 @@ using namespace std;
 class Score {
 private:
     int score;
+    int oldscore;
+    Uint32 flashTime;
     TextureManager* g_textureManager;
     TextRenderer* g_textRenderer;
 
