@@ -78,7 +78,6 @@ void Hook::startRetract() {
     }
 }
 
-
 void Hook::attachObject(int index, int ObjectSize, string id) {
     if(id == "mussel"){
         g_attachedMussel = true;

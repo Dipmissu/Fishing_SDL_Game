@@ -41,8 +41,8 @@ void TextureManager::draw(const string& id, int x, int y, int width, int height,
 
 void TextureManager::drawhook(const string& id, int x, int y, int width, int height, bool extending,
                           SDL_Renderer* renderer, SDL_RendererFlip flip) {
-    SDL_Point rotationPoint = {0, 0};
-    SDL_Rect destRect = {x, y, width, height};
+    SDL_Point rotationPoint = {2, 0};
+    SDL_Rect destRect = {x - 2, y, width, height};
     if(!extending){
         if (g_movingLeft) {
             g_angle += 1;

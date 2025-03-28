@@ -37,12 +37,15 @@
 		<Unit filename="creature.h" />
 		<Unit filename="game.cpp" />
 		<Unit filename="game.h" />
-		<Unit filename="generate.cpp" />
 		<Unit filename="hook.cpp" />
 		<Unit filename="hook.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="mussel.cpp" />
 		<Unit filename="mussel.h" />
+		<Unit filename="score.cpp" />
+		<Unit filename="score.h" />
+		<Unit filename="textrenderer.cpp" />
+		<Unit filename="textrenderer.h" />
 		<Unit filename="texturemanager.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

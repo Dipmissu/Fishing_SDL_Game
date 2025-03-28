@@ -26,6 +26,7 @@ void Creature::init(int x,int y, string path, int value) {
     g_value = value;
     g_collected = false;
 }
+
 void Creature::collect() {
     g_collected = true;
 }
@@ -46,6 +47,7 @@ void Creature::update(float deltaTime, int screenWidth, int screenHeight) {
         }
     }
 }
+
 void Creature::render(SDL_Renderer* renderer) {
     if (!g_collected) {
         if(g_facingRight){

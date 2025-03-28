@@ -8,7 +8,9 @@
 #include "hook.h"
 #include "creature.h"
 #include "mussel.h"
+#include "score.h"
 #include "texturemanager.h"
+#include "textrenderer.h"
 
 using namespace std;
 
@@ -17,7 +19,6 @@ private:
     SDL_Window* g_window;
     SDL_Renderer* g_renderer;
     bool g_isRunning;
-    int g_score;
     int g_timeLeft;
     Uint32 g_lastTime;
 
@@ -32,6 +33,8 @@ private:
 
     // Texture manager
     TextureManager* g_textureManager;
+    TextRenderer* g_textRenderer;
+    Score* g_score;
 
 public:
     Game();
