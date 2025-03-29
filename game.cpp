@@ -5,6 +5,7 @@
 #include "textrenderer.h"
 #include <ctime>
 #include <cstdlib>
+#include <vector>
 #include <iostream>
 #include <sstream>
 
@@ -14,14 +15,19 @@ Game::Game() :
     g_window(nullptr),
     g_renderer(nullptr),
     g_isRunning(false),
+    g_touchPlay(false),
+    g_touchHelp(false),
+    g_touchExit(false),
     g_timeLeft(TIME),
     g_lastTime(0),
+    g_gameIndex(1),
     g_screenWidth(SCREEN_WIDTH),
     g_screenHeight(SCREEN_HEIGHT),
     g_hook(nullptr),
     g_score(nullptr),
     g_time(nullptr),
     g_textureManager(nullptr),
+    g_textRendererTile(nullptr),
     g_textRenderer(nullptr) {
     srand(static_cast<unsigned int>(time(nullptr)));
 }
@@ -58,87 +64,120 @@ bool Game::init(const string& title, int width, int height) {
         return false;
     }
 
-    // Khởi tạo SDL_image
     int imgFlags = IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags)) {
         cerr << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << endl;
         return false;
     }
 
-    // Khởi tạo texture manager
     g_textureManager = new TextureManager();
-
-    // Khởi tạo text renderer
     g_textRenderer = new TextRenderer(g_renderer,"font/PatuaOne-Regular.ttf",FONT_SIZE);
-
-    // Khởi tạo score
+    g_textRendererTile = new TextRenderer(g_renderer,"font/Daydream.ttf",FONT_SIZE_TILE);
     g_score = new Score(g_textureManager,g_textRenderer);
-
-    // Khởi tạo time
     g_time = new Time(g_textureManager,g_textRenderer);
 
-    // Tải các texture
-    if (!g_textureManager->loadTexture("creature_1", "image/creature_1.png", g_renderer)) {
-        cerr << "Failed to load creature_1 texture!" << endl;
+    struct TextureData {
+        string id;
+        string path;
+    };
+
+    vector<TextureData> textures = {
+        {"creature_1", "image/creature_1.png"},
+        {"creature_2", "image/creature_2.png"},
+        {"creature_3", "image/creature_3.png"},
+        {"creature_4", "image/creature_4.png"},
+        {"background", "image/background.png"},
+        {"treasure", "image/treasure.png"},
+        {"mussel", "image/mussel.png"},
+        {"fisher", "image/fisher.png"},
+        {"button","image/button.png"},
+        {"board", "image/board.png"},
+        {"hook", "image/hook.png"},
+        {"coin", "image/coin.png"},
+        {"time", "image/time.png"},
+        {"menu","image/menu.png"}
+    };
+
+    for (const auto& texture : textures) {
+        if (!g_textureManager->loadTexture(texture.id, texture.path, g_renderer)) {
+            cerr << "Failed to load " << texture.id << " texture!" << endl;
+        }
     }
 
-    if (!g_textureManager->loadTexture("creature_2", "image/creature_2.png", g_renderer)) {
-        cerr << "Failed to load creature_2 texture!" << endl;
-    }
-
-    if (!g_textureManager->loadTexture("creature_3", "image/creature_3.png", g_renderer)) {
-        cerr << "Failed to load creature_3 texture!" << endl;
-    }
-
-    if (!g_textureManager->loadTexture("creature_4", "image/creature_4.png", g_renderer)) {
-        cerr << "Failed to load creature_4 texture!" << endl;
-    }
-
-    if (!g_textureManager->loadTexture("treasure", "image/treasure.png", g_renderer)) {
-        cerr << "Failed to load treasure texture!" << endl;
-    }
-
-    if (!g_textureManager->loadTexture("mussel","image/mussel.png", g_renderer)) {
-        cerr << "Failed to load mussel texture!" << endl;
-    }
-
-    if (!g_textureManager->loadTexture("background", "image/background.png", g_renderer)) {
-        cerr << "Failed to load background texture!" << endl;
-    }
-
-    if (!g_textureManager->loadTexture("fisher", "image/fisher.png", g_renderer)) {
-        cerr << "Failed to load fisher texture!" << endl;
-    }
-
-    if (!g_textureManager->loadTexture("hook", "image/hook.png", g_renderer)) {
-        cerr << "Failed to load hook texture!" << endl;
-    }
-
-    if (!g_textureManager->loadTexture("board", "image/board.png", g_renderer)) {
-        cerr << "Failed to load board texture!" << endl;
-    }
-
-    if (!g_textureManager->loadTexture("coin", "image/coin.png", g_renderer)) {
-        cerr << "Failed to load coin texture!" << endl;
-    }
-
-    if (!g_textureManager->loadTexture("time", "image/time.png", g_renderer)) {
-        cerr << "Failed to load time texture!" << endl;
-    }
-
-    // Khởi tạo hook
     g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT);
-
-    // Khởi tạo sinh vật
     createCreatures();
-
-    // Tạo các con trai
     createMussel();
 
     g_isRunning = true;
-    g_lastTime = SDL_GetTicks();
+    g_gameState = MENU;
+    g_gameIndex = 1;
+    g_touchPlay = false;
 
     return true;
+}
+
+void Game::renderMenu() {
+    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
+    SDL_RenderClear(g_renderer);
+
+    g_textureManager->draw("menu",0,0,g_screenWidth,g_screenHeight,g_renderer);
+
+    SDL_Color textColor = {0, 0, 0, 0};
+    SDL_Color touchColor = {255,255,255,255};
+    g_textRendererTile->renderText("Fishing Game!", textColor, g_screenWidth / 2 - 180, 20);
+
+    // Vẽ nút Play
+    g_textureManager->draw("button",g_screenWidth / 2 - 90, 240, 180, 80, g_renderer);
+    if(g_touchPlay == true) g_textRendererTile->renderText("Play", touchColor, g_screenWidth / 2 - 60, 257);
+    else g_textRendererTile->renderText("Play", textColor, g_screenWidth / 2 - 60, 257);
+
+    // Vẽ nút Help
+    g_textureManager->draw("button",g_screenWidth / 2 - 90, 310, 180, 80, g_renderer);
+    if(g_touchHelp == true) g_textRendererTile->renderText("Help", touchColor, g_screenWidth / 2 - 60, 328);
+    else g_textRendererTile->renderText("Help", textColor, g_screenWidth / 2 - 60, 328);
+
+    // Vẽ nút Exit
+    g_textureManager->draw("button",g_screenWidth / 2 - 90, 380, 180, 80, g_renderer);
+    if(g_touchExit == true) g_textRendererTile->renderText("Exit", touchColor, g_screenWidth / 2 - 60, 398);
+    else g_textRendererTile->renderText("Exit", textColor, g_screenWidth / 2 - 60, 398);
+
+    SDL_RenderPresent(g_renderer);
+}
+
+void Game::handleMenuEvents() {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            g_gameState = EXIT;
+            g_isRunning = false;
+        }
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+        g_touchPlay = (x >= g_screenWidth / 2 - 90 && x <= g_screenWidth / 2 + 90 && y >= 250 && y <= 310);
+        g_touchHelp = (x >= g_screenWidth / 2 - 90 && x <= g_screenWidth / 2 + 90 && y >= 320 && y <= 380);
+        g_touchExit = (x >= g_screenWidth / 2 - 90 && x <= g_screenWidth / 2 + 90 && y >= 380 && y <= 450);
+
+        if (event.type == SDL_MOUSEBUTTONDOWN) {
+
+            // Kiểm tra click vào nút Play
+            if (x >= g_screenWidth / 2 - 90 && x <= g_screenWidth / 2 + 90 && y >= 250 && y <= 310) {
+                g_gameState = PLAY;
+                g_gameIndex = 2;
+            }
+
+            // Kiểm tra click vào nút Help
+            if (x >= g_screenWidth / 2 - 90 && x <= g_screenWidth / 2 + 90 && y >= 320 && y <= 380) {
+                g_gameState = HELP;
+                g_gameIndex = 3;
+            }
+
+            // Kiểm tra click vào nút Exit
+            if (x >= g_screenWidth / 2 - 90 && x <= g_screenWidth / 2 + 90 && y >= 380 && y <= 450) {
+                g_gameState = EXIT;
+                g_isRunning = false;
+            }
+        }
+    }
 }
 
 void Game::createCreatures(){
@@ -219,159 +258,143 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
+    if(g_gameState == PLAY){
+        g_time->update();
+        g_isRunning = g_time->isRunning();
 
-    g_time->update();
+        g_hook->update();
+        for(auto& creature : g_creatures) creature->update(g_screenWidth, g_screenHeight);
 
-    g_isRunning = g_time->isRunning();
+        // Kiểm tra va chạm với tĩnh vật
+        if (g_hook->isExtending() && !g_hook->isAttachedCreature() && !g_hook->isAttachedMussel()) {
+            SDL_Point hookTip = g_hook->getTipPosition();
 
-    // Cập nhật sinh vật
-    for(auto& creature : g_creatures){
-        creature->update(g_screenWidth, g_screenHeight);
-    }
-
-    // Cập nhật hook
-    g_hook->update();
-
-    // Kiểm tra va chạm với trai
-    if (g_hook->isExtending() && !g_hook->isAttachedCreature() && !g_hook->isAttachedMussel()) {
-        SDL_Point hookTip = g_hook->getTipPosition();
-
-        for (size_t i = 0; i < g_mussel.size(); i++) {
-            if (!g_mussel[i]->isCollected() &&
-                SDL_PointInRect(&hookTip, &g_mussel[i]->getRect())) {
-                g_hook->attachObject(i, g_mussel[i]->getRect().w, "mussel");
-                break;
+            for (size_t i = 0; i < g_mussel.size(); i++) {
+                if (!g_mussel[i]->isCollected() &&
+                    SDL_PointInRect(&hookTip, &g_mussel[i]->getRect())) {
+                    g_hook->attachObject(i, g_mussel[i]->getRect().w, "mussel");
+                    break;
+                }
             }
         }
 
-    }
+        // Kiểm tra va chạm với sinh vật
+        if (g_hook->isExtending() && !g_hook->isAttachedCreature() && !g_hook->isAttachedMussel()) {
+            SDL_Point hookTip = g_hook->getTipPosition();
 
-    // Kiểm tra va chạm với sinh vật
-    if (g_hook->isExtending() && !g_hook->isAttachedCreature() && !g_hook->isAttachedMussel()) {
-        SDL_Point hookTip = g_hook->getTipPosition();
-
-        for (size_t i = 0; i < g_creatures.size(); i++) {
-            if (!g_creatures[i]->isCollected() &&
-                SDL_PointInRect(&hookTip, &g_creatures[i]->getRect())) {
-                g_hook->attachObject(i, g_creatures[i]->getRect().w,"creature");
-                break;
+            for (size_t i = 0; i < g_creatures.size(); i++) {
+                if (!g_creatures[i]->isCollected() &&
+                    SDL_PointInRect(&hookTip, &g_creatures[i]->getRect())) {
+                    g_hook->attachObject(i, g_creatures[i]->getRect().w,"creature");
+                    break;
+                }
             }
         }
-    }
 
-    // Kiểm tra hook chạm đáy màn hình
-    if (g_hook->isExtending() && !g_hook->isAttachedMussel() && !g_hook->isAttachedCreature() &&
-        (g_hook->getTipPosition().y >= g_screenHeight || g_hook->getTipPosition().x >= g_screenWidth || g_hook->getTipPosition().x <= 0)) {
-        g_score->addPoints(-100);
-        g_hook->startRetract();
+        // Kiểm tra hook chạm đáy màn hình
+        if (g_hook->isExtending() && !g_hook->isAttachedMussel() && !g_hook->isAttachedCreature() &&
+            (g_hook->getTipPosition().y >= g_screenHeight || g_hook->getTipPosition().x >= g_screenWidth || g_hook->getTipPosition().x <= 0)) {
+            g_score->addPoints(-100);
+            g_hook->startRetract();
 
-    }
+        }
 
-    // Cập nhật vị trí con trai đã bắt được
-    if (g_hook->isAttachedMussel()) {
-        int ObjectIndex = g_hook->getAttachedObjectIndex();
-        SDL_Point hookTip = g_hook->getTipPosition();
+        // Cập nhật vị trí tĩnh vật đã bắt được
+        if (g_hook->isAttachedMussel()) {
+            int ObjectIndex = g_hook->getAttachedObjectIndex();
+            SDL_Point hookTip = g_hook->getTipPosition();
 
-        g_mussel[ObjectIndex]->setPosition(
-            hookTip.x - g_mussel[ObjectIndex]->getRect().w / 2,
-            hookTip.y - g_mussel[ObjectIndex]->getRect().h / 2
-        );
+            g_mussel[ObjectIndex]->setPosition(
+                hookTip.x - g_mussel[ObjectIndex]->getRect().w / 2,
+                hookTip.y - g_mussel[ObjectIndex]->getRect().h / 2
+            );
 
-    }
+        }
 
-    // Cập nhật vị trí sinh vật đã bắt được
-    if (g_hook->isAttachedCreature()) {
-        int ObjectIndex = g_hook->getAttachedObjectIndex();
-        SDL_Point hookTip = g_hook->getTipPosition();
+        // Cập nhật vị trí sinh vật đã bắt được
+        if (g_hook->isAttachedCreature()) {
+            int ObjectIndex = g_hook->getAttachedObjectIndex();
+            SDL_Point hookTip = g_hook->getTipPosition();
 
-        g_creatures[ObjectIndex]->setPosition(
-            hookTip.x - g_creatures[ObjectIndex]->getRect().w / 2,
-            hookTip.y - g_creatures[ObjectIndex]->getRect().h / 2
-        );
-    }
+            g_creatures[ObjectIndex]->setPosition(
+                hookTip.x - g_creatures[ObjectIndex]->getRect().w / 2,
+                hookTip.y - g_creatures[ObjectIndex]->getRect().h / 2
+            );
+        }
 
-    // Kiểm tra khi hook về vị trí ban đầu
-    if (g_hook->hasReturned() && g_hook->isAttachedMussel()) {
-        int ObjectIndex = g_hook->getAttachedObjectIndex();
+        // Kiểm tra khi hook về vị trí ban đầu
+        if (g_hook->hasReturned() && g_hook->isAttachedMussel()) {
 
-        // Cộng điểm và đánh dấu con trai đã thu thập
-        g_score->addPoints(g_mussel[ObjectIndex]->getValue());
-        g_mussel[ObjectIndex]->collect();
-        g_hook->detachObject("mussel");
-    }
-    if (g_hook->hasReturned() && g_hook->isAttachedCreature()) {
-        int ObjectIndex = g_hook->getAttachedObjectIndex();
+            int ObjectIndex = g_hook->getAttachedObjectIndex();
+            g_score->addPoints(g_mussel[ObjectIndex]->getValue());
+            g_mussel[ObjectIndex]->collect();
+            g_hook->detachObject("mussel");
+        }
+        if (g_hook->hasReturned() && g_hook->isAttachedCreature()) {
 
-        // Cộng điểm và đánh dấu sinh vật đã thu thập
-        g_score->addPoints(g_creatures[ObjectIndex]->getValue());
-        g_creatures[ObjectIndex]->collect();
-        g_hook->detachObject("creature");
+            int ObjectIndex = g_hook->getAttachedObjectIndex();
+            g_score->addPoints(g_creatures[ObjectIndex]->getValue());
+            g_creatures[ObjectIndex]->collect();
+            g_hook->detachObject("creature");
+        }
     }
 }
 
 void Game::render() {
-    // Xóa màn hình
-    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255); // Màu nền
+    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
     SDL_RenderClear(g_renderer);
 
-    // Vẽ nền
-    g_textureManager->draw("background",0,0,g_screenWidth,g_screenHeight,g_renderer);
-
-    // Vẽ người câu cá
-    g_textureManager->draw("fisher",g_screenWidth / 2 - FISHER_WIDTH / 2 - 44,FISHER_DISTANT,FISHER_WIDTH,FISHER_HEIGHT,g_renderer);
-
-    // Vẽ tĩnh vật
-    for (auto& mussel : g_mussel) {
-        mussel->render(g_renderer);
+    if (g_gameState == MENU) {
+        renderMenu();
     }
+    else if (g_gameState == PLAY) {
+        g_textureManager->draw("background",0,0,g_screenWidth,g_screenHeight,g_renderer);
+        g_textureManager->draw("fisher",g_screenWidth / 2 - FISHER_WIDTH / 2 - 44,FISHER_DISTANT,FISHER_WIDTH,FISHER_HEIGHT,g_renderer);
 
-    // Vẽ sinh vật
-    for (auto& creature : g_creatures) {
-        creature->render(g_renderer);
+        for (auto& mussel : g_mussel) mussel->render(g_renderer);
+        for (auto& creature : g_creatures) creature->render(g_renderer);
+
+        g_hook->render(g_renderer);
+        SDL_Point hookTip = g_hook->getTipPosition();
+        g_textureManager->drawhook("hook", hookTip.x, hookTip.y, HOOK_WIDTH, HOOK_WIDTH,g_hook->isExtending(),g_renderer);
+
+        g_score->render(g_renderer);
+        g_time->render(g_renderer);
+
+        SDL_RenderPresent(g_renderer);
     }
-
-    // Vẽ hook
-    g_hook->render(g_renderer);
-    SDL_Point hookTip = g_hook->getTipPosition();
-    g_textureManager->drawhook("hook", hookTip.x, hookTip.y, HOOK_WIDTH, HOOK_WIDTH,g_hook->isExtending(),g_renderer);
-
-    // Hiển thị điểm số và thời gian
-
-    g_score->render(g_renderer);
-
-    g_time->render(g_renderer);
-
-    // Hiển thị màn hình
-    SDL_RenderPresent(g_renderer);
 }
 
 void Game::clean() {
-    // Giải phóng các đối tượng
+    for (auto& creature : g_creatures) delete creature;
+    g_creatures.clear();
+
+    for (auto& mussel : g_mussel) delete mussel;
+    g_mussel.clear();
+
     if (g_hook) {
         delete g_hook;
         g_hook = nullptr;
     }
-
-    for (auto& creature : g_creatures) {
-        delete creature;
-    }
-    g_creatures.clear();
-
-    for (auto& mussel : g_mussel) {
-        delete mussel;
-    }
-    g_mussel.clear();
 
     if (g_textureManager) {
         delete g_textureManager;
         g_textureManager = nullptr;
     }
 
-    // Giải phóng SDL
+    if (g_textRenderer) {
+        delete g_textRenderer;
+        g_textRenderer = nullptr;
+    }
+
     SDL_DestroyRenderer(g_renderer);
     SDL_DestroyWindow(g_window);
     IMG_Quit();
     SDL_Quit();
+}
+
+int Game::getgameIndex() const {
+    return g_gameIndex;
 }
 
 bool Game::running() const {

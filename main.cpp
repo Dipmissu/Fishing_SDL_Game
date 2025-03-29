@@ -14,7 +14,14 @@ int main(int argc, char* argv[]) {
     }
 
     while (game.running()) {
-        game.handleEvents();
+        switch(game.getgameIndex()){
+            case 1:
+                game.handleMenuEvents();
+                break;
+            case 2:
+                game.handleEvents();
+                break;
+        }
         game.update();
         game.render();
 

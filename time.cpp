@@ -29,7 +29,7 @@ void Time::render(SDL_Renderer* renderer){
     string second_text = (second < 10) ? "0" + to_string(second) : to_string(second);
     string text = minute_text + " : " + second_text;
 
-    SDL_Color color = {75, 0, 130, 0};
+    SDL_Color color = {0, 0, 0, 0};
     g_textureManager->draw("board", SCREEN_WIDTH - 100, 15, BOARD_WIDTH, BOARD_HEIGHT, renderer);
     g_textureManager->draw("time", SCREEN_WIDTH - 48, 25, TIMER_RADIUS, TIMER_RADIUS, renderer);
     g_textRenderer->renderText(text, color, SCREEN_WIDTH - 90, 23);

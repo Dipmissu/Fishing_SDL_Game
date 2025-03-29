@@ -15,12 +15,18 @@
 
 using namespace std;
 
+enum GameState {MENU, PLAY, HELP, EXIT};
+
 class Game {
 private:
     SDL_Window* g_window;
     SDL_Renderer* g_renderer;
     bool g_isRunning;
     int g_timeLeft;
+    int g_gameIndex;
+    bool g_touchPlay;
+    bool g_touchHelp;
+    bool g_touchExit;
     Uint32 g_lastTime;
 
     // Kích thước cửa sổ
@@ -32,11 +38,13 @@ private:
     vector<Creature*> g_creatures;
     vector<Mussel*> g_mussel;
 
-    // Texture manager
     TextureManager* g_textureManager;
     TextRenderer* g_textRenderer;
+    TextRenderer* g_textRendererTile;
     Score* g_score;
     Time* g_time;
+
+    GameState g_gameState;
 
 public:
     Game();
@@ -50,6 +58,9 @@ public:
     void render();
     void clean();
     bool running() const;
+    int getgameIndex() const;
+    void renderMenu();
+    void handleMenuEvents();
 
     SDL_Renderer* getRenderer() const { return g_renderer; }
     TextureManager* getTextureManager() const { return g_textureManager; }

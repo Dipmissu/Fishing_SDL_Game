@@ -29,7 +29,7 @@ void Score::render(SDL_Renderer* renderer){
     oldscore = score;
     string score_text = to_string(score);
     string deltascore_text = (deltascore < 0) ? to_string(deltascore) : "+" + to_string(deltascore);
-    SDL_Color color = {75, 0, 130, 0};
+    SDL_Color color = {0, 0, 0, 0};
     int posY = (deltascore != 0) ? 60 : - 20;
     g_textureManager->draw("board", 20, 15, BOARD_WIDTH, BOARD_HEIGHT, renderer);
     g_textureManager->draw("coin", 73, 25, COIN_RADIUS, COIN_RADIUS, renderer);

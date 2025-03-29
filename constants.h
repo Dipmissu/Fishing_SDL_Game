@@ -39,6 +39,7 @@ const int TIMER_RADIUS = 20;
 
 // font
 const int FONT_SIZE = 18;
+const int FONT_SIZE_TILE = 32;
 
 
 #endif // CONSTANTS_H
