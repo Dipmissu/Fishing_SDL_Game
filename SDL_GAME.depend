@@ -8,7 +8,7 @@
 	<iostream>
 	<string>
 
-1743185622 d:\study\fisher\sdl_game\hook.h
+1743308275 d:\study\fisher\sdl_game\hook.h
 	<SDL.h>
 	<string>
 
@@ -27,7 +27,7 @@
 	"constants.h"
 	<cstdlib>
 
-1743153368 d:\study\fisher\sdl_game\creature.h
+1743308275 d:\study\fisher\sdl_game\creature.h
 	<SDL.h>
 	<string>
 	"texturemanager.h"
@@ -37,7 +37,7 @@
 	"constants.h"
 	<iostream>
 
-1743270672 d:\study\fisher\sdl_game\game.h
+1743359413 d:\study\fisher\sdl_game\game.h
 	<SDL.h>
 	<SDL_image.h>
 	<vector>
@@ -47,18 +47,19 @@
 	"mussel.h"
 	"score.h"
 	"time.h"
+	"explosion.h"
 	"texturemanager.h"
 	"textrenderer.h"
 
-1742746146 d:\study\fisher\sdl_game\mussel.h
+1743361163 d:\study\fisher\sdl_game\mussel.h
 	<SDL.h>
 	<string>
 	"texturemanager.h"
 
-1743050882 source:d:\study\fisher\sdl_game\mussel.cpp
+1743361163 source:d:\study\fisher\sdl_game\mussel.cpp
 	"mussel.h"
 
-1743270672 source:d:\study\fisher\sdl_game\game.cpp
+1743360851 source:d:\study\fisher\sdl_game\game.cpp
 	"game.h"
 	"score.h"
 	"constants.h"
@@ -69,36 +70,46 @@
 	<iostream>
 	<sstream>
 
-1743266610 d:\study\fisher\sdl_game\constants.h
+1743346242 d:\study\fisher\sdl_game\constants.h
+	<string>
 
 1743064468 source:d:\study\fisher\sdl_game\textrenderer.cpp
 	"textrenderer.h"
 	<iostream>
 
-1743064468 d:\study\fisher\sdl_game\textrenderer.h
+1743308275 d:\study\fisher\sdl_game\textrenderer.h
 	<SDL.h>
 	<SDL_ttf.h>
 	<string>
 
-1743267469 source:d:\study\fisher\sdl_game\score.cpp
+1743308295 source:d:\study\fisher\sdl_game\score.cpp
 	"score.h"
 	"constants.h"
 	<string>
 	<iostream>
 
-1743172921 d:\study\fisher\sdl_game\score.h
+1743308282 d:\study\fisher\sdl_game\score.h
 	<SDL.h>
 	<string>
 	"texturemanager.h"
 	"textrenderer.h"
 
-1743153253 d:\study\fisher\sdl_game\time.h
+1743308482 d:\study\fisher\sdl_game\time.h
 	<SDL.h>
 	<string>
 	"texturemanager.h"
 	"textrenderer.h"
 
-1743267469 source:d:\study\fisher\sdl_game\time.cpp
+1743308491 source:d:\study\fisher\sdl_game\time.cpp
 	"time.h"
 	"constants.h"
+
+1743360889 source:d:\study\fisher\sdl_game\explosion.cpp
+	"explosion.h"
+	"constants.h"
+
+1743359839 d:\study\fisher\sdl_game\explosion.h
+	<SDL.h>
+	"constants.h"
+	"texturemanager.h"
 

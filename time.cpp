@@ -2,26 +2,26 @@
 #include "constants.h"
 
 Time::Time (TextureManager* textureManager, TextRenderer* textRenderer) :
-    timeLeft(TIME),
-    Running(true),
-    lastTime(0),
+    g_timeLeft(TIME),
+    g_running(true),
+    g_lastTime(0),
     g_textureManager(textureManager),
     g_textRenderer(textRenderer){}
 
 void Time::update(){
     Uint32 currentTime = SDL_GetTicks();
-    float deltaTime = (currentTime - lastTime) / 1000.0f;
-    lastTime = currentTime;
-    timeLeft -= deltaTime;
+    float deltaTime = (currentTime - g_lastTime) / 1000.0f;
+    g_lastTime = currentTime;
+    g_timeLeft -= deltaTime;
 
-    if(timeLeft <= 0){
-        timeLeft = 0;
-        Running = false;
+    if(g_timeLeft <= 0){
+        g_timeLeft = 0;
+        g_running = false;
     }
 }
 
 void Time::render(SDL_Renderer* renderer){
-    int time = timeLeft / 60.0f;
+    int time = g_timeLeft / 60.0f;
     int minute = time / 60; // Lấy số phút
     int second = time % 60; // Lấy số giây còn lại
 

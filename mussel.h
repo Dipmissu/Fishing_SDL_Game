@@ -23,8 +23,10 @@ public:
     void render(SDL_Renderer* renderer);
     void collect();
     void setPosition(int x, int y);
+    int getValue();
 
     const SDL_Rect& getRect() const { return g_rect; }
-    int getValue() const { return g_value; }
     bool isCollected() const { return g_collected; }
+    string getPath() const {return g_path; }
+
 };

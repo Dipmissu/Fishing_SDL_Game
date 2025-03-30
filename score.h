@@ -1,3 +1,4 @@
+// score.h
 #pragma once
 
 #include <SDL.h>
@@ -9,9 +10,9 @@ using namespace std;
 
 class Score {
 private:
-    int score;
-    int oldscore;
-    Uint32 flashTime;
+    int g_score;
+    int g_oldscore;
+    Uint32 g_flashTime;
     TextureManager* g_textureManager;
     TextRenderer* g_textRenderer;
 
@@ -20,7 +21,7 @@ public:
 
     void addPoints(int points);
     void reset();
-    int getScore() const {return score;}
+    int getScore() const {return g_score;}
     void render(SDL_Renderer* renderer);
 };
 

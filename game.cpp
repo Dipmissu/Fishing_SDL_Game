@@ -24,6 +24,7 @@ Game::Game() :
     g_screenWidth(SCREEN_WIDTH),
     g_screenHeight(SCREEN_HEIGHT),
     g_hook(nullptr),
+    g_explosion(nullptr),
     g_score(nullptr),
     g_time(nullptr),
     g_textureManager(nullptr),
@@ -87,15 +88,27 @@ bool Game::init(const string& title, int width, int height) {
         {"creature_3", "image/creature_3.png"},
         {"creature_4", "image/creature_4.png"},
         {"background", "image/background.png"},
-        {"treasure", "image/treasure.png"},
         {"mussel", "image/mussel.png"},
         {"fisher", "image/fisher.png"},
         {"button","image/button.png"},
         {"board", "image/board.png"},
+        {"bomb", "image/bomb.png"},
         {"hook", "image/hook.png"},
         {"coin", "image/coin.png"},
         {"time", "image/time.png"},
-        {"menu","image/menu.png"}
+        {"menu","image/menu.png"},
+
+        // Tải texture explosion
+        {"1","image/explosion/Explosion_1.png"},
+        {"2","image/explosion/Explosion_2.png"},
+        {"3","image/explosion/Explosion_3.png"},
+        {"4","image/explosion/Explosion_4.png"},
+        {"5","image/explosion/Explosion_5.png"},
+        {"6","image/explosion/Explosion_6.png"},
+        {"7","image/explosion/Explosion_7.png"},
+        {"8","image/explosion/Explosion_8.png"},
+        {"9","image/explosion/Explosion_9.png"},
+        {"10","image/explosion/Explosion_10.png"}
     };
 
     for (const auto& texture : textures) {
@@ -105,6 +118,7 @@ bool Game::init(const string& title, int width, int height) {
     }
 
     g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT);
+    g_explosion = new Explosion(g_textureManager);
     createCreatures();
     createMussel();
 
@@ -216,11 +230,10 @@ void Game::createMussel() {
     }
     g_mussel.clear();
 
-    vector<string> path{"mussel", "treasure"};
+    vector<string> path{"bomb", "mussel"};
 
     for (int i = 0; i < MUSSEL_NUMBER; i++) {
         int size = rand() % 20 + 35;
-        int value = size * 10;
         bool overlap;
         int x, y;
         do {
@@ -235,8 +248,9 @@ void Game::createMussel() {
                 }
             }
         } while (overlap);
+        int pos = rand() % 2;
         Mussel* mussel = new Mussel(g_textureManager);
-        mussel->init(x, y, size, size, value, path[rand() % 2]);
+        mussel->init(x, y, size, size, size / 2 * (pos + 1) * 10, path[pos]);
         g_mussel.push_back(mussel);
     }
 }
@@ -253,6 +267,9 @@ void Game::handleEvents() {
                     g_hook->startExtend();
                 }
                 break;
+            case SDL_MOUSEBUTTONDOWN:
+                g_hook->startExtend();
+                break;
         }
     }
 }
@@ -263,6 +280,7 @@ void Game::update() {
         g_isRunning = g_time->isRunning();
 
         g_hook->update();
+        g_explosion->update();
         for(auto& creature : g_creatures) creature->update(g_screenWidth, g_screenHeight);
 
         // Kiểm tra va chạm với tĩnh vật
@@ -273,6 +291,12 @@ void Game::update() {
                 if (!g_mussel[i]->isCollected() &&
                     SDL_PointInRect(&hookTip, &g_mussel[i]->getRect())) {
                     g_hook->attachObject(i, g_mussel[i]->getRect().w, "mussel");
+                    if(g_mussel[i]->getPath() == "bomb") {
+                            g_mussel[i]->collect();
+                            g_explosion->isAttached();
+                            g_score->addPoints(g_mussel[i]->getValue());
+                            g_explosion->init(hookTip.x, hookTip.y, g_mussel[i]->getRect().w);
+                    }
                     break;
                 }
             }
@@ -326,6 +350,7 @@ void Game::update() {
         if (g_hook->hasReturned() && g_hook->isAttachedMussel()) {
 
             int ObjectIndex = g_hook->getAttachedObjectIndex();
+            if(g_mussel[ObjectIndex]->getPath() == "mussel")
             g_score->addPoints(g_mussel[ObjectIndex]->getValue());
             g_mussel[ObjectIndex]->collect();
             g_hook->detachObject("mussel");
@@ -351,6 +376,7 @@ void Game::render() {
         g_textureManager->draw("background",0,0,g_screenWidth,g_screenHeight,g_renderer);
         g_textureManager->draw("fisher",g_screenWidth / 2 - FISHER_WIDTH / 2 - 44,FISHER_DISTANT,FISHER_WIDTH,FISHER_HEIGHT,g_renderer);
 
+        g_explosion->render(g_renderer);
         for (auto& mussel : g_mussel) mussel->render(g_renderer);
         for (auto& creature : g_creatures) creature->render(g_renderer);
 

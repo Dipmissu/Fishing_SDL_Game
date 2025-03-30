@@ -1,4 +1,4 @@
-// Creature.h
+// creature.h
 #pragma once
 
 #include <SDL.h>

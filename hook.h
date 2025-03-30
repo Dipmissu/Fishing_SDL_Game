@@ -1,4 +1,4 @@
-// Hook.h
+// hook.h
 #pragma once
 
 #include <SDL.h>

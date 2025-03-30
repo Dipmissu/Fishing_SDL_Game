@@ -10,6 +10,7 @@
 #include "mussel.h"
 #include "score.h"
 #include "time.h"
+#include "explosion.h"
 #include "texturemanager.h"
 #include "textrenderer.h"
 
@@ -35,8 +36,9 @@ private:
 
     // Các đối tượng game
     Hook* g_hook;
-    vector<Creature*> g_creatures;
+    Explosion* g_explosion;
     vector<Mussel*> g_mussel;
+    vector<Creature*> g_creatures;
 
     TextureManager* g_textureManager;
     TextRenderer* g_textRenderer;

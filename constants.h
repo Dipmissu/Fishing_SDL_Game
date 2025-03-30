@@ -1,8 +1,13 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <string>
+
+using namespace std;
+
 // game
-const int TIME = 7200;
+const int MINUTE = 2;
+const int TIME = MINUTE * 3600;
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const string TITLE = "Fishing Game!";
@@ -33,6 +38,9 @@ const int BOARD_HEIGHT = 40;
 
 // coin
 const int COIN_RADIUS = 20;
+
+//bomb
+const int EXPLOSION_FRAME = 10;
 
 // time
 const int TIMER_RADIUS = 20;

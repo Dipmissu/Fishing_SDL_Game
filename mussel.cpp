@@ -18,9 +18,12 @@ void Mussel::init(int x, int y, int w, int h, int val, string path) {
     g_collected = false;
 }
 
+int Mussel::getValue(){
+    return (g_path == "bomb") ? -g_value : g_value;
+}
+
 void Mussel::render(SDL_Renderer* renderer) {
-    if (!g_collected) {
-        // Sử dụng texture nếu có, hoặc vẽ hình chữ nhật
+    if (!g_collected ) {
         g_textureManager->draw(g_path, g_rect.x, g_rect.y, g_rect.w, g_rect.h, renderer);
     }
 }

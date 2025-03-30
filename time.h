@@ -1,3 +1,4 @@
+// time.h
 #pragma once
 
 #include <SDL.h>
@@ -7,9 +8,9 @@
 
 class Time{
 private:
-    int timeLeft;
-    int lastTime;
-    bool Running;
+    int g_timeLeft;
+    int g_lastTime;
+    bool g_running;
 
     TextureManager* g_textureManager;
     TextRenderer* g_textRenderer;
@@ -19,7 +20,7 @@ public:
 
     void render(SDL_Renderer* renderer);
     void update();
-    int getTime() const {return timeLeft;}
-    bool isRunning() const {return Running;}
+    int getTime() const {return g_timeLeft;}
+    bool isRunning() const {return g_running;}
 
 };
