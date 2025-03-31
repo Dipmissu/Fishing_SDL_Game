@@ -2,14 +2,15 @@
 #pragma once
 
 #include <SDL.h>
-#include <SDL_image.h>
 #include <vector>
 #include <string>
-#include "hook.h"
-#include "creature.h"
-#include "mussel.h"
-#include "score.h"
+#include <SDL_image.h>
 #include "time.h"
+#include "hook.h"
+#include "score.h"
+#include "sound.h"
+#include "mussel.h"
+#include "creature.h"
 #include "explosion.h"
 #include "texturemanager.h"
 #include "textrenderer.h"
@@ -22,12 +23,15 @@ class Game {
 private:
     SDL_Window* g_window;
     SDL_Renderer* g_renderer;
-    bool g_isRunning;
     int g_timeLeft;
     int g_gameIndex;
+    bool g_soundOn;
+    bool g_musicOn;
+    bool g_isRunning;
     bool g_touchPlay;
     bool g_touchHelp;
     bool g_touchExit;
+    bool g_touchScreen;
     Uint32 g_lastTime;
 
     // Kích thước cửa sổ
@@ -36,15 +40,16 @@ private:
 
     // Các đối tượng game
     Hook* g_hook;
+    Sound* g_sound;
     Explosion* g_explosion;
     vector<Mussel*> g_mussel;
     vector<Creature*> g_creatures;
 
-    TextureManager* g_textureManager;
+    Time* g_time;
+    Score* g_score;
     TextRenderer* g_textRenderer;
     TextRenderer* g_textRendererTile;
-    Score* g_score;
-    Time* g_time;
+    TextureManager* g_textureManager;
 
     GameState g_gameState;
 

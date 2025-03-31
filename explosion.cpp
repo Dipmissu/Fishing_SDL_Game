@@ -43,6 +43,6 @@ void Explosion::update(){
 void Explosion::render(SDL_Renderer* renderer){
     if(g_attached == true){
             string path = to_string(g_frame);
-            g_textureManager->draw(path, xPos - g_size / 2, yPos - g_size / 2, g_size, g_size, renderer);
+            g_textureManager->draw(path, xPos - g_size / 4, yPos - g_size / 4, g_size, g_size, renderer);
     }
 }

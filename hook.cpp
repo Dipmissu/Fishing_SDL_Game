@@ -16,7 +16,7 @@ Hook::Hook(int x, int y) :
     g_attachedMussel(false),
     g_attachedCreature(false),
     g_attachedObjectIndex(-1),
-    g_returned(false) {
+    g_returned(true) {
 
     g_base = {x, y, 120, 120};
     g_tip = {x, y};

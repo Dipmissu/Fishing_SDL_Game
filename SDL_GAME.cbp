@@ -46,6 +46,8 @@
 		<Unit filename="mussel.h" />
 		<Unit filename="score.cpp" />
 		<Unit filename="score.h" />
+		<Unit filename="sound.cpp" />
+		<Unit filename="sound.h" />
 		<Unit filename="textrenderer.cpp" />
 		<Unit filename="textrenderer.h" />
 		<Unit filename="texturemanager.cpp" />

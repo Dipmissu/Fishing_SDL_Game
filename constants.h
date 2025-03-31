@@ -22,7 +22,7 @@ const int CREATURE_RADIUS = 48;
 
 // hook
 const int ANGLE = 150;
-const int HOOK_LENGTH = 50;
+const int HOOK_LENGTH = 60;
 const int HOOK_SPEED = 5;
 const int HOOK_WIDTH = 10;
 const int FRAME_DELAY = 1;

@@ -1,5 +1,6 @@
 // game.cpp
 #include "game.h"
+#include "sound.h"
 #include "score.h"
 #include "constants.h"
 #include "textrenderer.h"
@@ -14,19 +15,22 @@ using namespace std;
 Game::Game() :
     g_window(nullptr),
     g_renderer(nullptr),
+    g_lastTime(0),
+    g_gameIndex(1),
     g_isRunning(false),
     g_touchPlay(false),
     g_touchHelp(false),
     g_touchExit(false),
+    g_touchScreen(false),
     g_timeLeft(TIME),
-    g_lastTime(0),
-    g_gameIndex(1),
     g_screenWidth(SCREEN_WIDTH),
     g_screenHeight(SCREEN_HEIGHT),
     g_hook(nullptr),
     g_explosion(nullptr),
     g_score(nullptr),
     g_time(nullptr),
+    g_soundOn(true),
+    g_musicOn(true),
     g_textureManager(nullptr),
     g_textRendererTile(nullptr),
     g_textRenderer(nullptr) {
@@ -41,7 +45,7 @@ bool Game::init(const string& title, int width, int height) {
     g_screenWidth = width;
     g_screenHeight = height;
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) < 0) {
         cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << endl;
         return false;
     }
@@ -60,6 +64,10 @@ bool Game::init(const string& title, int width, int height) {
         return false;
     }
 
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
+        cerr << "SDL_mixer could not initialize! Mixer Error: " << Mix_GetError() << endl;
+    }
+
     if (TTF_Init() == -1) {
         cerr << "SDL_ttf could not initialize! TTF Error: " << TTF_GetError() << endl;
         return false;
@@ -74,8 +82,15 @@ bool Game::init(const string& title, int width, int height) {
     g_textureManager = new TextureManager();
     g_textRenderer = new TextRenderer(g_renderer,"font/PatuaOne-Regular.ttf",FONT_SIZE);
     g_textRendererTile = new TextRenderer(g_renderer,"font/Daydream.ttf",FONT_SIZE_TILE);
-    g_score = new Score(g_textureManager,g_textRenderer);
+
+    createMussel();
+    createCreatures();
+
+    g_sound = new Sound();
+    g_explosion = new Explosion(g_textureManager);
     g_time = new Time(g_textureManager,g_textRenderer);
+    g_score = new Score(g_textureManager,g_textRenderer);
+    g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT);
 
     struct TextureData {
         string id;
@@ -117,15 +132,14 @@ bool Game::init(const string& title, int width, int height) {
         }
     }
 
-    g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT);
-    g_explosion = new Explosion(g_textureManager);
-    createCreatures();
-    createMussel();
-
+    g_soundOn = true;
+    g_musicOn = true;
+    g_gameIndex = 1;
     g_isRunning = true;
     g_gameState = MENU;
-    g_gameIndex = 1;
     g_touchPlay = false;
+
+    g_sound->playBackgroundMusic(g_musicOn);
 
     return true;
 }
@@ -264,7 +278,9 @@ void Game::handleEvents() {
                 break;
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_SPACE) {
+                    if(g_hook->hasReturned()) g_sound->playGrab(g_soundOn);
                     g_hook->startExtend();
+
                 }
                 break;
             case SDL_MOUSEBUTTONDOWN:
@@ -293,9 +309,11 @@ void Game::update() {
                     g_hook->attachObject(i, g_mussel[i]->getRect().w, "mussel");
                     if(g_mussel[i]->getPath() == "bomb") {
                             g_mussel[i]->collect();
+                            g_sound->playExplosion(g_soundOn);
                             g_explosion->isAttached();
                             g_score->addPoints(g_mussel[i]->getValue());
-                            g_explosion->init(hookTip.x, hookTip.y, g_mussel[i]->getRect().w);
+                            //g_explosion->init(hookTip.x, hookTip.y, g_mussel[i]->getRect().w);
+                            g_explosion->init(g_mussel[i]->getRect().x, g_mussel[i]->getRect().y, g_mussel[i]->getRect().w);
                     }
                     break;
                 }
@@ -320,8 +338,10 @@ void Game::update() {
             (g_hook->getTipPosition().y >= g_screenHeight || g_hook->getTipPosition().x >= g_screenWidth || g_hook->getTipPosition().x <= 0)) {
             g_score->addPoints(-100);
             g_hook->startRetract();
-
+            g_touchScreen = true;
         }
+            if(g_touchScreen && g_hook->hasReturned()) g_sound->playGrab(g_soundOn);
+            if(g_hook->hasReturned()) g_touchScreen = false;
 
         // Cập nhật vị trí tĩnh vật đã bắt được
         if (g_hook->isAttachedMussel()) {
@@ -354,6 +374,7 @@ void Game::update() {
             g_score->addPoints(g_mussel[ObjectIndex]->getValue());
             g_mussel[ObjectIndex]->collect();
             g_hook->detachObject("mussel");
+            g_sound->playGrab(g_soundOn);
         }
         if (g_hook->hasReturned() && g_hook->isAttachedCreature()) {
 
@@ -361,6 +382,7 @@ void Game::update() {
             g_score->addPoints(g_creatures[ObjectIndex]->getValue());
             g_creatures[ObjectIndex]->collect();
             g_hook->detachObject("creature");
+            g_sound->playGrab(g_soundOn);
         }
     }
 }
@@ -397,6 +419,8 @@ void Game::clean() {
 
     for (auto& mussel : g_mussel) delete mussel;
     g_mussel.clear();
+
+    delete g_sound;
 
     if (g_hook) {
         delete g_hook;
