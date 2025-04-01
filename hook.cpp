@@ -13,6 +13,7 @@ Hook::Hook(int x, int y) :
     g_length(HOOK_LENGTH),
     g_speed(HOOK_SPEED),
     g_movingLeft(false),
+    g_attachedBox(false),
     g_attachedMussel(false),
     g_attachedCreature(false),
     g_attachedObjectIndex(-1),
@@ -85,6 +86,9 @@ void Hook::attachObject(int index, int ObjectSize, string id) {
     else if(id == "creature"){
         g_attachedCreature = true;
     }
+    else {
+        g_attachedBox = true;
+    }
     g_attachedObjectIndex = index;
 
     // Điều chỉnh tốc độ kéo về dựa trên kích thước vật
@@ -98,6 +102,9 @@ void Hook::detachObject(string id) {
     }
     else if(id == "creature"){
         g_attachedCreature = false;
+    }
+    else {
+        g_attachedBox = false;
     }
     g_attachedObjectIndex = -1;
     g_speed = 5.0; // Reset tốc độ

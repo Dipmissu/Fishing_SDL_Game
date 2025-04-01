@@ -14,6 +14,7 @@ private:
     bool g_extending;
     double g_length;
     double g_speed;
+    bool g_attachedBox;
     bool g_attachedMussel;
     bool g_attachedCreature;
     bool g_movingLeft;
@@ -33,6 +34,7 @@ public:
     void detachObject(string id);
 
     bool isExtending() const { return g_extending; }
+    bool isAttachedBox() const {return g_attachedBox; }
     bool isAttachedMussel() const { return g_attachedMussel; }
     bool isAttachedCreature() const { return g_attachedCreature; }
     bool hasReturned() const { return g_returned; }

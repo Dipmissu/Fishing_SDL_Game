@@ -7,6 +7,7 @@
 #include <SDL_image.h>
 #include "time.h"
 #include "hook.h"
+#include "box.h"
 #include "score.h"
 #include "sound.h"
 #include "mussel.h"
@@ -32,6 +33,7 @@ private:
     bool g_touchHelp;
     bool g_touchExit;
     bool g_touchScreen;
+    bool g_boxCollected;
     Uint32 g_lastTime;
 
     // Kích thước cửa sổ
@@ -39,6 +41,7 @@ private:
     int g_screenHeight;
 
     // Các đối tượng game
+    Box* g_box;
     Hook* g_hook;
     Sound* g_sound;
     Explosion* g_explosion;

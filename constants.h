@@ -27,6 +27,9 @@ const int HOOK_SPEED = 5;
 const int HOOK_WIDTH = 10;
 const int FRAME_DELAY = 1;
 
+// box
+const int BOX_RADIUS = 40;
+
 // fisher
 const int FISHER_DISTANT = 80;
 const int FISHER_WIDTH = 120;

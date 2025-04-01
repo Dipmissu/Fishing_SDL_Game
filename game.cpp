@@ -22,15 +22,17 @@ Game::Game() :
     g_touchHelp(false),
     g_touchExit(false),
     g_touchScreen(false),
+    g_boxCollected(true),
     g_timeLeft(TIME),
     g_screenWidth(SCREEN_WIDTH),
     g_screenHeight(SCREEN_HEIGHT),
+    g_box(nullptr),
     g_hook(nullptr),
-    g_explosion(nullptr),
     g_score(nullptr),
     g_time(nullptr),
     g_soundOn(true),
     g_musicOn(true),
+    g_explosion(nullptr),
     g_textureManager(nullptr),
     g_textRendererTile(nullptr),
     g_textRenderer(nullptr) {
@@ -112,6 +114,7 @@ bool Game::init(const string& title, int width, int height) {
         {"coin", "image/coin.png"},
         {"time", "image/time.png"},
         {"menu","image/menu.png"},
+        {"box","image/box.png"},
 
         // Tải texture explosion
         {"1","image/explosion/Explosion_1.png"},
@@ -295,17 +298,23 @@ void Game::update() {
         g_time->update();
         g_isRunning = g_time->isRunning();
 
+        if(g_boxCollected == true ){
+            g_box = new Box(g_textureManager);
+            g_box->init(g_screenWidth,g_screenHeight);
+            g_boxCollected = false;
+        }
+
         g_hook->update();
         g_explosion->update();
+        g_box->update(g_screenWidth, g_screenHeight);
         for(auto& creature : g_creatures) creature->update(g_screenWidth, g_screenHeight);
 
-        // Kiểm tra va chạm với tĩnh vật
-        if (g_hook->isExtending() && !g_hook->isAttachedCreature() && !g_hook->isAttachedMussel()) {
+        // Kiểm tra va chạm với vật
+        if (g_hook->isExtending() && !g_hook->isAttachedCreature() && !g_hook->isAttachedMussel() && !g_hook->isAttachedBox()) {
             SDL_Point hookTip = g_hook->getTipPosition();
-
+            // Va chạm tĩnh vật
             for (size_t i = 0; i < g_mussel.size(); i++) {
-                if (!g_mussel[i]->isCollected() &&
-                    SDL_PointInRect(&hookTip, &g_mussel[i]->getRect())) {
+                if (!g_mussel[i]->isCollected() && SDL_PointInRect(&hookTip, &g_mussel[i]->getRect())) {
                     g_hook->attachObject(i, g_mussel[i]->getRect().w, "mussel");
                     if(g_mussel[i]->getPath() == "bomb") {
                             g_mussel[i]->collect();
@@ -318,19 +327,17 @@ void Game::update() {
                     break;
                 }
             }
-        }
-
-        // Kiểm tra va chạm với sinh vật
-        if (g_hook->isExtending() && !g_hook->isAttachedCreature() && !g_hook->isAttachedMussel()) {
-            SDL_Point hookTip = g_hook->getTipPosition();
-
+            // Va chạm sinh vật
             for (size_t i = 0; i < g_creatures.size(); i++) {
-                if (!g_creatures[i]->isCollected() &&
-                    SDL_PointInRect(&hookTip, &g_creatures[i]->getRect())) {
+                if (!g_creatures[i]->isCollected() && SDL_PointInRect(&hookTip, &g_creatures[i]->getRect())) {
                     g_hook->attachObject(i, g_creatures[i]->getRect().w,"creature");
                     break;
                 }
             }
+            // Va chạm box
+            if(!g_box->isCollected() && SDL_PointInRect(&hookTip, &g_box->getRect())){
+                g_hook->attachObject(0,g_box->getRect().w,"box");
+               }
         }
 
         // Kiểm tra hook chạm đáy màn hình
@@ -340,8 +347,10 @@ void Game::update() {
             g_hook->startRetract();
             g_touchScreen = true;
         }
-            if(g_touchScreen && g_hook->hasReturned()) g_sound->playGrab(g_soundOn);
-            if(g_hook->hasReturned()) g_touchScreen = false;
+
+        // Âm thanh khi chạm đáy
+        if(g_touchScreen && g_hook->hasReturned()) g_sound->playGrab(g_soundOn);
+        if(g_hook->hasReturned()) g_touchScreen = false;
 
         // Cập nhật vị trí tĩnh vật đã bắt được
         if (g_hook->isAttachedMussel()) {
@@ -366,12 +375,23 @@ void Game::update() {
             );
         }
 
+        // Cập nhật vị trí box đã bắt được
+        if (g_hook->isAttachedBox()) {
+            SDL_Point hookTip = g_hook->getTipPosition();
+
+            g_box->setPosition(
+                hookTip.x - g_box->getRect().w / 2,
+                hookTip.y - g_box->getRect().h / 2
+            );
+        }
+
         // Kiểm tra khi hook về vị trí ban đầu
         if (g_hook->hasReturned() && g_hook->isAttachedMussel()) {
 
             int ObjectIndex = g_hook->getAttachedObjectIndex();
-            if(g_mussel[ObjectIndex]->getPath() == "mussel")
-            g_score->addPoints(g_mussel[ObjectIndex]->getValue());
+            if(g_mussel[ObjectIndex]->getPath() == "mussel") {
+                g_score->addPoints(g_mussel[ObjectIndex]->getValue());
+            }
             g_mussel[ObjectIndex]->collect();
             g_hook->detachObject("mussel");
             g_sound->playGrab(g_soundOn);
@@ -383,6 +403,12 @@ void Game::update() {
             g_creatures[ObjectIndex]->collect();
             g_hook->detachObject("creature");
             g_sound->playGrab(g_soundOn);
+        }
+        if (g_hook->hasReturned() && g_hook->isAttachedBox()) {
+            g_box->collect();
+            g_hook->detachObject("box");
+            g_sound->playGrab(g_soundOn);
+            g_boxCollected = true;
         }
     }
 }
@@ -402,6 +428,7 @@ void Game::render() {
         for (auto& mussel : g_mussel) mussel->render(g_renderer);
         for (auto& creature : g_creatures) creature->render(g_renderer);
 
+        g_box->render(g_renderer);
         g_hook->render(g_renderer);
         SDL_Point hookTip = g_hook->getTipPosition();
         g_textureManager->drawhook("hook", hookTip.x, hookTip.y, HOOK_WIDTH, HOOK_WIDTH,g_hook->isExtending(),g_renderer);
@@ -420,6 +447,7 @@ void Game::clean() {
     for (auto& mussel : g_mussel) delete mussel;
     g_mussel.clear();
 
+    delete g_box;
     delete g_sound;
 
     if (g_hook) {

@@ -1,0 +1,30 @@
+// box.h
+#pragma once
+
+#include <SDL.h>
+#include <string>
+#include "textureManager.h"
+
+using namespace std;
+
+class Box {
+private:
+    SDL_Rect g_rect;
+    int g_speed;
+    int g_directionX;
+    int g_directionY;
+    bool g_collected;
+    string g_path;
+    TextureManager* g_textureManager;
+public:
+    Box(TextureManager* textureManager);
+    ~Box();
+    void init(int screenWidth, int screenHeight);
+    void update(int screenWidth, int screenHeight);
+    void render(SDL_Renderer* renderer);
+    void collect();
+    void setPosition(int x, int y);
+    const SDL_Rect& getRect() const { return g_rect; }
+    bool isCollected() const { return g_collected; }
+
+};
