@@ -22,6 +22,10 @@ int Mussel::getValue(){
     return (g_path == "bomb") ? -g_value : g_value;
 }
 
+void Mussel::setValue(){
+    g_value *= 2;
+}
+
 void Mussel::render(SDL_Renderer* renderer) {
     if (!g_collected ) {
         g_textureManager->draw(g_path, g_rect.x, g_rect.y, g_rect.w, g_rect.h, renderer);

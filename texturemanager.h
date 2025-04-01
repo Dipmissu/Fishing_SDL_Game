@@ -19,7 +19,7 @@ public:
     bool loadTexture(const string& id, const string& path, SDL_Renderer* renderer);
     void draw(const string& id, int x, int y, int width, int height,
               SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE);
-    void drawhook(const string& id, int x, int y, int width, int height,  bool extending,
+    void drawhook(const string& id, int x, int y, int width, int height,  bool extending, bool pause,
                   SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE);
     void drawFrame(const string& id, int x, int y, int width, int height,
                    int currentRow, int currentFrame, SDL_Renderer* renderer,

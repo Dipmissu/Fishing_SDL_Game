@@ -14,13 +14,10 @@ int main(int argc, char* argv[]) {
     }
 
     while (game.running()) {
-        switch(game.getgameIndex()){
-            case 1:
-                game.handleMenuEvents();
-                break;
-            case 2:
-                game.handleEvents();
-                break;
+        if(game.getGameState() == MENU){
+            game.handleMenuEvents();
+        } else if(game.getGameState() == PLAY) {
+            game.handleEvents();
         }
         game.update();
         game.render();

@@ -59,6 +59,10 @@ void Creature::render(SDL_Renderer* renderer) {
     }
 }
 
+void Creature::setValue(){
+    g_value *= 2;
+}
+
 void Creature::setPosition(int x, int y) {
     g_rect.x = x;
     g_rect.y = y;

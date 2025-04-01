@@ -14,7 +14,8 @@ private:
     int g_directionX;
     int g_directionY;
     bool g_collected;
-    string g_path;
+    string g_state;
+
     TextureManager* g_textureManager;
 public:
     Box(TextureManager* textureManager);
@@ -22,9 +23,10 @@ public:
     void init(int screenWidth, int screenHeight);
     void update(int screenWidth, int screenHeight);
     void render(SDL_Renderer* renderer);
+    string state();
     void collect();
     void setPosition(int x, int y);
-    const SDL_Rect& getRect() const { return g_rect; }
     bool isCollected() const { return g_collected; }
+    const SDL_Rect& getRect() const { return g_rect; }
 
 };

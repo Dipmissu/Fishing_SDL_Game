@@ -20,6 +20,7 @@ public:
 
     void render(SDL_Renderer* renderer);
     void update();
+    void addTime(int time);
     int getTime() const {return g_timeLeft;}
     bool isRunning() const {return g_running;}
 

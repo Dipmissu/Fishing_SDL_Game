@@ -15,11 +15,17 @@ Box::Box (TextureManager* textureManager):
 Box::~Box(){};
 
 void Box::init(int screenWidth, int screenHeight){
-    vector<string> buff = {"x2","15s"};
     int x = rand() % (screenWidth - 150) + 20;
-    int y = rand() % (screenHeight - 300) + 250;
-    g_path = buff[rand() % 2];
+    int y = rand() % (screenHeight - 400) + 300;
     g_rect = {x, y, BOX_RADIUS, BOX_RADIUS};
+}
+
+string Box::state(){
+    int index = rand() % 10;
+    if(index == 0) g_state = "x2";
+    if(index > 0 && index < 6) g_state = "extratime";
+    if(index >= 6) g_state = "minus";
+    return g_state;
 }
 
 void Box::update(int screenWidth, int screenHeight){
@@ -48,6 +54,10 @@ void Box::update(int screenWidth, int screenHeight){
 void Box::render(SDL_Renderer* renderer){
     if(!g_collected){
         g_textureManager->draw("box",g_rect.x,g_rect.y,BOX_RADIUS,BOX_RADIUS,renderer);
+    } else {
+        if(g_state == "x2") g_textureManager->draw("x2",BOX_X,BOX_Y,BOX_W,BOX_H,renderer);
+        if(g_state == "minus") g_textureManager->draw("minus",BOX_X,BOX_Y,BOX_W,BOX_H,renderer);
+        if(g_state == "extratime") g_textureManager->draw("extratime",BOX_X,BOX_Y,BOX_W,BOX_H,renderer);
     }
 }
 

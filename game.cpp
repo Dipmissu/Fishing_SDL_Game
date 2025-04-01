@@ -16,13 +16,12 @@ Game::Game() :
     g_window(nullptr),
     g_renderer(nullptr),
     g_lastTime(0),
-    g_gameIndex(1),
     g_isRunning(false),
+    g_pause(false),
     g_touchPlay(false),
     g_touchHelp(false),
     g_touchExit(false),
     g_touchScreen(false),
-    g_boxCollected(true),
     g_timeLeft(TIME),
     g_screenWidth(SCREEN_WIDTH),
     g_screenHeight(SCREEN_HEIGHT),
@@ -32,6 +31,7 @@ Game::Game() :
     g_time(nullptr),
     g_soundOn(true),
     g_musicOn(true),
+    g_boxCollected(true),
     g_explosion(nullptr),
     g_textureManager(nullptr),
     g_textRendererTile(nullptr),
@@ -126,7 +126,12 @@ bool Game::init(const string& title, int width, int height) {
         {"7","image/explosion/Explosion_7.png"},
         {"8","image/explosion/Explosion_8.png"},
         {"9","image/explosion/Explosion_9.png"},
-        {"10","image/explosion/Explosion_10.png"}
+        {"10","image/explosion/Explosion_10.png"},
+
+        // Tải texture box
+        {"x2","image/x2.png"},
+        {"minus","image/minus.png"},
+        {"extratime","image/extratime.png"}
     };
 
     for (const auto& texture : textures) {
@@ -137,7 +142,6 @@ bool Game::init(const string& title, int width, int height) {
 
     g_soundOn = true;
     g_musicOn = true;
-    g_gameIndex = 1;
     g_isRunning = true;
     g_gameState = MENU;
     g_touchPlay = false;
@@ -193,13 +197,11 @@ void Game::handleMenuEvents() {
             // Kiểm tra click vào nút Play
             if (x >= g_screenWidth / 2 - 90 && x <= g_screenWidth / 2 + 90 && y >= 250 && y <= 310) {
                 g_gameState = PLAY;
-                g_gameIndex = 2;
             }
 
             // Kiểm tra click vào nút Help
             if (x >= g_screenWidth / 2 - 90 && x <= g_screenWidth / 2 + 90 && y >= 320 && y <= 380) {
                 g_gameState = HELP;
-                g_gameIndex = 3;
             }
 
             // Kiểm tra click vào nút Exit
@@ -283,7 +285,9 @@ void Game::handleEvents() {
                 if (event.key.keysym.sym == SDLK_SPACE) {
                     if(g_hook->hasReturned()) g_sound->playGrab(g_soundOn);
                     g_hook->startExtend();
-
+                }
+                if(event.key.keysym.sym == SDLK_p){
+                    g_pause = !g_pause;
                 }
                 break;
             case SDL_MOUSEBUTTONDOWN:
@@ -294,13 +298,15 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
-    if(g_gameState == PLAY){
+    if(g_gameState == PLAY && !g_pause){
         g_time->update();
         g_isRunning = g_time->isRunning();
 
         if(g_boxCollected == true ){
+            delete g_box;
             g_box = new Box(g_textureManager);
             g_box->init(g_screenWidth,g_screenHeight);
+            g_buff = g_box->state();
             g_boxCollected = false;
         }
 
@@ -309,10 +315,9 @@ void Game::update() {
         g_box->update(g_screenWidth, g_screenHeight);
         for(auto& creature : g_creatures) creature->update(g_screenWidth, g_screenHeight);
 
-        // Kiểm tra va chạm với vật
+        // Va chạm tĩnh vật
         if (g_hook->isExtending() && !g_hook->isAttachedCreature() && !g_hook->isAttachedMussel() && !g_hook->isAttachedBox()) {
             SDL_Point hookTip = g_hook->getTipPosition();
-            // Va chạm tĩnh vật
             for (size_t i = 0; i < g_mussel.size(); i++) {
                 if (!g_mussel[i]->isCollected() && SDL_PointInRect(&hookTip, &g_mussel[i]->getRect())) {
                     g_hook->attachObject(i, g_mussel[i]->getRect().w, "mussel");
@@ -327,17 +332,25 @@ void Game::update() {
                     break;
                 }
             }
-            // Va chạm sinh vật
+        }
+
+        // Va chạm sinh vật
+        if (g_hook->isExtending() && !g_hook->isAttachedCreature() && !g_hook->isAttachedMussel() && !g_hook->isAttachedBox()) {
+            SDL_Point hookTip = g_hook->getTipPosition();
             for (size_t i = 0; i < g_creatures.size(); i++) {
                 if (!g_creatures[i]->isCollected() && SDL_PointInRect(&hookTip, &g_creatures[i]->getRect())) {
                     g_hook->attachObject(i, g_creatures[i]->getRect().w,"creature");
                     break;
                 }
             }
-            // Va chạm box
+        }
+
+        // Va chạm box
+        if (g_hook->isExtending() && !g_hook->isAttachedCreature() && !g_hook->isAttachedMussel() && !g_hook->isAttachedBox()) {
+            SDL_Point hookTip = g_hook->getTipPosition();
             if(!g_box->isCollected() && SDL_PointInRect(&hookTip, &g_box->getRect())){
                 g_hook->attachObject(0,g_box->getRect().w,"box");
-               }
+            }
         }
 
         // Kiểm tra hook chạm đáy màn hình
@@ -431,11 +444,30 @@ void Game::render() {
         g_box->render(g_renderer);
         g_hook->render(g_renderer);
         SDL_Point hookTip = g_hook->getTipPosition();
-        g_textureManager->drawhook("hook", hookTip.x, hookTip.y, HOOK_WIDTH, HOOK_WIDTH,g_hook->isExtending(),g_renderer);
+        g_textureManager->drawhook("hook", hookTip.x, hookTip.y, HOOK_WIDTH, HOOK_WIDTH,g_hook->isExtending(),g_pause,g_renderer);
 
         g_score->render(g_renderer);
         g_time->render(g_renderer);
 
+        if(g_box->isCollected()) {
+            // hiển thị note
+            SDL_Color note = {0,0,0,0};
+            g_textRenderer->renderText("Press P to continue!!",note,g_screenWidth / 2 - 80, 440);
+            g_pause = true;
+            if(g_buff == "extratime") {
+                g_time->addTime(15*60);
+                g_buff = "null";
+            }
+            if(g_buff == "minus") {
+                g_score->addPoints(-200);
+                g_buff = "null";
+            }
+            if(g_buff == "x2") {
+                for (auto& mussel : g_mussel) mussel->setValue();
+                for (auto& creature : g_creatures) creature->setValue();
+                g_buff = "null";
+            }
+        }
         SDL_RenderPresent(g_renderer);
     }
 }
@@ -471,8 +503,8 @@ void Game::clean() {
     SDL_Quit();
 }
 
-int Game::getgameIndex() const {
-    return g_gameIndex;
+GameState Game::getGameState() const {
+    return g_gameState;
 }
 
 bool Game::running() const {

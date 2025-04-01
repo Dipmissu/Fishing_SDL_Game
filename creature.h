@@ -34,5 +34,6 @@ public:
     void setPosition(int x, int y);
     const SDL_Rect& getRect() const { return g_rect; }
     int getValue() const { return g_value; }
+    void setValue();
     bool isCollected() const { return g_collected; }
 };

@@ -25,7 +25,7 @@ private:
     SDL_Window* g_window;
     SDL_Renderer* g_renderer;
     int g_timeLeft;
-    int g_gameIndex;
+    bool g_pause;
     bool g_soundOn;
     bool g_musicOn;
     bool g_isRunning;
@@ -34,6 +34,7 @@ private:
     bool g_touchExit;
     bool g_touchScreen;
     bool g_boxCollected;
+    string g_buff;
     Uint32 g_lastTime;
 
     // Kích thước cửa sổ
@@ -68,7 +69,7 @@ public:
     void render();
     void clean();
     bool running() const;
-    int getgameIndex() const;
+    GameState getGameState() const;
     void renderMenu();
     void handleMenuEvents();
 

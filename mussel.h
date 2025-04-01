@@ -23,6 +23,7 @@ public:
     void render(SDL_Renderer* renderer);
     void collect();
     void setPosition(int x, int y);
+    void setValue();
     int getValue();
 
     const SDL_Rect& getRect() const { return g_rect; }

@@ -28,6 +28,10 @@ const int HOOK_WIDTH = 10;
 const int FRAME_DELAY = 1;
 
 // box
+const int BOX_X = 100;
+const int BOX_Y = 200;
+const int BOX_W = 600;
+const int BOX_H = 300;
 const int BOX_RADIUS = 40;
 
 // fisher
