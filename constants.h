@@ -6,7 +6,7 @@
 using namespace std;
 
 // game
-const int MINUTE = 2;
+const int MINUTE = 5;
 const int TIME = MINUTE * 3600;
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -17,7 +17,7 @@ const int MUSSEL_NUMBER = 6;
 
 // creatures
 const int FRAME_COUNT = 6;
-const int CREATURE_NUMBER = 8;
+const int CREATURE_NUMBER = 0;
 const int CREATURE_RADIUS = 48;
 
 // hook
@@ -42,6 +42,9 @@ const int FISHER_HEIGHT = 120;
 // board
 const int BOARD_WIDTH = 80;
 const int BOARD_HEIGHT = 40;
+
+// setting
+const int HOME_RADIUS = 20;
 
 // coin
 const int COIN_RADIUS = 20;

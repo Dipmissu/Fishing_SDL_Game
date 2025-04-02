@@ -18,6 +18,8 @@ int main(int argc, char* argv[]) {
             game.handleMenuEvents();
         } else if(game.getGameState() == PLAY) {
             game.handleEvents();
+        } else if(game.getGameState() == HELP) {
+            game.handleHelpEvents();
         }
         game.update();
         game.render();

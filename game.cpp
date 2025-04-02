@@ -16,6 +16,7 @@ Game::Game() :
     g_window(nullptr),
     g_renderer(nullptr),
     g_lastTime(0),
+    g_numberEntity(0),
     g_isRunning(false),
     g_pause(false),
     g_touchPlay(false),
@@ -41,6 +42,73 @@ Game::Game() :
 
 Game::~Game() {
     clean();
+}
+
+GameState Game::getGameState() const {
+    return g_gameState;
+}
+
+void Game::createCreatures(){
+    for(auto& creature : g_creatures){
+        delete creature;
+    }
+    g_creatures.clear();
+
+    vector<string> path{"creature_4", "creature_3", "creature_2", "creature_1"};
+
+    for (int i = 0; i < CREATURE_NUMBER; i++) {
+        bool overlap;
+        int x, y;
+        do {
+            x = rand() % (g_screenWidth - 150) + 20;
+            y = rand() % (g_screenHeight - 300) + 250;
+            overlap = false;
+            for (const auto& creature : g_creatures) {
+                if (abs(x - creature->getRect().x) < CREATURE_RADIUS * 2 &&
+                    abs(y - creature->getRect().y) < CREATURE_RADIUS * 2) {
+                    overlap = true;
+                    break;
+                }
+            }
+        } while (overlap);
+        int pos = rand() % 4;
+        Creature* creature = new Creature(g_textureManager);
+        creature->init(x, y, path[pos], (pos + 1) * 100);
+        g_creatures.push_back(creature);
+    }
+    g_numberEntity += CREATURE_NUMBER;
+}
+
+void Game::createMussel() {
+    for (auto& mussel : g_mussel) {
+        delete mussel;
+    }
+    g_mussel.clear();
+
+    vector<string> path{"bomb", "mussel"};
+
+    for (int i = 0; i < MUSSEL_NUMBER; i++) {
+        int size = rand() % 20 + 35;
+        bool overlap;
+        int x, y;
+        do {
+            x = rand() % (g_screenWidth - size);
+            y = rand() % (g_screenHeight - 500) + 450;
+            overlap = false;
+            for (const auto& mussel : g_mussel) {
+                if (abs(x - mussel->getRect().x) < size &&
+                    abs(y - mussel->getRect().y) < size) {
+                    overlap = true;
+                    break;
+                }
+            }
+        } while (overlap);
+        int pos = rand() % 2;
+        if(pos == 1) g_numberEntity++;
+        Mussel* mussel = new Mussel(g_textureManager);
+        mussel->init(x, y, size, size, size / 2 * (pos + 1) * 10, path[pos]);
+        g_mussel.push_back(mussel);
+    }
 }
 
 bool Game::init(const string& title, int width, int height) {
@@ -114,6 +182,8 @@ bool Game::init(const string& title, int width, int height) {
         {"coin", "image/coin.png"},
         {"time", "image/time.png"},
         {"menu","image/menu.png"},
+        {"help","image/help.png"},
+        {"home","image/home.png"},
         {"box","image/box.png"},
 
         // Tải texture explosion
@@ -140,8 +210,8 @@ bool Game::init(const string& title, int width, int height) {
         }
     }
 
-    g_soundOn = true;
-    g_musicOn = true;
+    g_soundOn = false;
+    g_musicOn = false;
     g_isRunning = true;
     g_gameState = MENU;
     g_touchPlay = false;
@@ -149,34 +219,6 @@ bool Game::init(const string& title, int width, int height) {
     g_sound->playBackgroundMusic(g_musicOn);
 
     return true;
-}
-
-void Game::renderMenu() {
-    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
-    SDL_RenderClear(g_renderer);
-
-    g_textureManager->draw("menu",0,0,g_screenWidth,g_screenHeight,g_renderer);
-
-    SDL_Color textColor = {0, 0, 0, 0};
-    SDL_Color touchColor = {255,255,255,255};
-    g_textRendererTile->renderText("Fishing Game!", textColor, g_screenWidth / 2 - 180, 20);
-
-    // Vẽ nút Play
-    g_textureManager->draw("button",g_screenWidth / 2 - 90, 240, 180, 80, g_renderer);
-    if(g_touchPlay == true) g_textRendererTile->renderText("Play", touchColor, g_screenWidth / 2 - 60, 257);
-    else g_textRendererTile->renderText("Play", textColor, g_screenWidth / 2 - 60, 257);
-
-    // Vẽ nút Help
-    g_textureManager->draw("button",g_screenWidth / 2 - 90, 310, 180, 80, g_renderer);
-    if(g_touchHelp == true) g_textRendererTile->renderText("Help", touchColor, g_screenWidth / 2 - 60, 328);
-    else g_textRendererTile->renderText("Help", textColor, g_screenWidth / 2 - 60, 328);
-
-    // Vẽ nút Exit
-    g_textureManager->draw("button",g_screenWidth / 2 - 90, 380, 180, 80, g_renderer);
-    if(g_touchExit == true) g_textRendererTile->renderText("Exit", touchColor, g_screenWidth / 2 - 60, 398);
-    else g_textRendererTile->renderText("Exit", textColor, g_screenWidth / 2 - 60, 398);
-
-    SDL_RenderPresent(g_renderer);
 }
 
 void Game::handleMenuEvents() {
@@ -213,65 +255,22 @@ void Game::handleMenuEvents() {
     }
 }
 
-void Game::createCreatures(){
-    for(auto& creature : g_creatures){
-        delete creature;
-    }
-    g_creatures.clear();
-
-    vector<string> path{"creature_4", "creature_3", "creature_2", "creature_1"};
-
-    for (int i = 0; i < CREATURE_NUMBER; i++) {
-        bool overlap;
+void Game::handleHelpEvents() {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            g_gameState = EXIT;
+            g_isRunning = false;
+        }
         int x, y;
-        do {
-            x = rand() % (g_screenWidth - 150) + 20;
-            y = rand() % (g_screenHeight - 300) + 250;
-            overlap = false;
-            for (const auto& creature : g_creatures) {
-                if (abs(x - creature->getRect().x) < CREATURE_RADIUS * 2 &&
-                    abs(y - creature->getRect().y) < CREATURE_RADIUS * 2) {
-                    overlap = true;
-                    break;
-                }
+        SDL_GetMouseState(&x, &y);
+        if (event.type == SDL_MOUSEBUTTONDOWN) {
+            if (x >= 44 && x <= 77 && y >= 251 && y <= 284) {
+                    g_gameState = MENU;
             }
-        } while (overlap);
-        int pos = rand() % 4;
-        Creature* creature = new Creature(g_textureManager);
-        creature->init(x, y, path[pos], (pos + 1) * 100);
-        g_creatures.push_back(creature);
+        }
     }
-}
 
-void Game::createMussel() {
-    for (auto& mussel : g_mussel) {
-        delete mussel;
-    }
-    g_mussel.clear();
-
-    vector<string> path{"bomb", "mussel"};
-
-    for (int i = 0; i < MUSSEL_NUMBER; i++) {
-        int size = rand() % 20 + 35;
-        bool overlap;
-        int x, y;
-        do {
-            x = rand() % (g_screenWidth - size);
-            y = rand() % (g_screenHeight - 500) + 450;
-            overlap = false;
-            for (const auto& mussel : g_mussel) {
-                if (abs(x - mussel->getRect().x) < size &&
-                    abs(y - mussel->getRect().y) < size) {
-                    overlap = true;
-                    break;
-                }
-            }
-        } while (overlap);
-        int pos = rand() % 2;
-        Mussel* mussel = new Mussel(g_textureManager);
-        mussel->init(x, y, size, size, size / 2 * (pos + 1) * 10, path[pos]);
-        g_mussel.push_back(mussel);
-    }
 }
 
 void Game::handleEvents() {
@@ -290,15 +289,13 @@ void Game::handleEvents() {
                     g_pause = !g_pause;
                 }
                 break;
-            case SDL_MOUSEBUTTONDOWN:
-                g_hook->startExtend();
-                break;
         }
     }
 }
 
 void Game::update() {
     if(g_gameState == PLAY && !g_pause){
+        if(g_numberEntity == 0) {g_isRunning = false;}
         g_time->update();
         g_isRunning = g_time->isRunning();
 
@@ -326,7 +323,6 @@ void Game::update() {
                             g_sound->playExplosion(g_soundOn);
                             g_explosion->isAttached();
                             g_score->addPoints(g_mussel[i]->getValue());
-                            //g_explosion->init(hookTip.x, hookTip.y, g_mussel[i]->getRect().w);
                             g_explosion->init(g_mussel[i]->getRect().x, g_mussel[i]->getRect().y, g_mussel[i]->getRect().w);
                     }
                     break;
@@ -404,6 +400,7 @@ void Game::update() {
             int ObjectIndex = g_hook->getAttachedObjectIndex();
             if(g_mussel[ObjectIndex]->getPath() == "mussel") {
                 g_score->addPoints(g_mussel[ObjectIndex]->getValue());
+                g_numberEntity--;
             }
             g_mussel[ObjectIndex]->collect();
             g_hook->detachObject("mussel");
@@ -413,6 +410,7 @@ void Game::update() {
 
             int ObjectIndex = g_hook->getAttachedObjectIndex();
             g_score->addPoints(g_creatures[ObjectIndex]->getValue());
+            g_numberEntity--;
             g_creatures[ObjectIndex]->collect();
             g_hook->detachObject("creature");
             g_sound->playGrab(g_soundOn);
@@ -426,6 +424,34 @@ void Game::update() {
     }
 }
 
+void Game::renderMenu() {
+    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
+    SDL_RenderClear(g_renderer);
+
+    g_textureManager->draw("menu",0,0,g_screenWidth,g_screenHeight,g_renderer);
+
+    SDL_Color textColor = {0, 0, 0, 0};
+    SDL_Color touchColor = {255,255,255,255};
+    g_textRendererTile->renderText("Fishing Game!", textColor, g_screenWidth / 2 - 180, 20);
+
+    // Vẽ nút Play
+    g_textureManager->draw("button",g_screenWidth / 2 - 90, 240, 180, 80, g_renderer);
+    if(g_touchPlay == true) g_textRendererTile->renderText("Play", touchColor, g_screenWidth / 2 - 60, 257);
+    else g_textRendererTile->renderText("Play", textColor, g_screenWidth / 2 - 60, 257);
+
+    // Vẽ nút Help
+    g_textureManager->draw("button",g_screenWidth / 2 - 90, 310, 180, 80, g_renderer);
+    if(g_touchHelp == true) g_textRendererTile->renderText("Help", touchColor, g_screenWidth / 2 - 60, 328);
+    else g_textRendererTile->renderText("Help", textColor, g_screenWidth / 2 - 60, 328);
+
+    // Vẽ nút Exit
+    g_textureManager->draw("button",g_screenWidth / 2 - 90, 380, 180, 80, g_renderer);
+    if(g_touchExit == true) g_textRendererTile->renderText("Exit", touchColor, g_screenWidth / 2 - 60, 398);
+    else g_textRendererTile->renderText("Exit", textColor, g_screenWidth / 2 - 60, 398);
+
+    SDL_RenderPresent(g_renderer);
+}
+
 void Game::render() {
     SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
     SDL_RenderClear(g_renderer);
@@ -433,8 +459,17 @@ void Game::render() {
     if (g_gameState == MENU) {
         renderMenu();
     }
-    else if (g_gameState == PLAY) {
+    if (g_gameState == HELP) {
+        SDL_Color textColor = {0, 0, 0, 0};
+        SDL_Color touchColor = {255,255,255,255};
+        g_textureManager->draw("menu",0,0,g_screenWidth,g_screenHeight,g_renderer);
+        g_textRendererTile->renderText("Fishing Game!", textColor, g_screenWidth / 2 - 180, 20);
+        g_textureManager->draw("help",0,200,800,400,g_renderer);
+        SDL_RenderPresent(g_renderer);
+    }
+    if (g_gameState == PLAY) {
         g_textureManager->draw("background",0,0,g_screenWidth,g_screenHeight,g_renderer);
+        g_textureManager->draw("home",g_screenWidth / 2 - HOME_RADIUS,HOME_RADIUS,HOME_RADIUS,HOME_RADIUS,g_renderer);
         g_textureManager->draw("fisher",g_screenWidth / 2 - FISHER_WIDTH / 2 - 44,FISHER_DISTANT,FISHER_WIDTH,FISHER_HEIGHT,g_renderer);
 
         g_explosion->render(g_renderer);
@@ -501,10 +536,6 @@ void Game::clean() {
     SDL_DestroyWindow(g_window);
     IMG_Quit();
     SDL_Quit();
-}
-
-GameState Game::getGameState() const {
-    return g_gameState;
 }
 
 bool Game::running() const {

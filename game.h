@@ -25,6 +25,7 @@ private:
     SDL_Window* g_window;
     SDL_Renderer* g_renderer;
     int g_timeLeft;
+    int g_numberEntity;
     bool g_pause;
     bool g_soundOn;
     bool g_musicOn;
@@ -72,6 +73,7 @@ public:
     GameState getGameState() const;
     void renderMenu();
     void handleMenuEvents();
+    void handleHelpEvents();
 
     SDL_Renderer* getRenderer() const { return g_renderer; }
     TextureManager* getTextureManager() const { return g_textureManager; }
