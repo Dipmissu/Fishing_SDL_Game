@@ -20,6 +20,8 @@ int main(int argc, char* argv[]) {
             game.handleEvents();
         } else if(game.getGameState() == HELP) {
             game.handleHelpEvents();
+        } else if (game.getGameState() == GAMEOVER) {
+            game.handleGameOverEvents();
         }
         game.update();
         game.render();

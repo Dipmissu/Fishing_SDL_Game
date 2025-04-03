@@ -2,6 +2,7 @@
 #include "game.h"
 #include "sound.h"
 #include "score.h"
+#include "gameover.h"
 #include "constants.h"
 #include "textrenderer.h"
 #include <ctime>
@@ -152,6 +153,7 @@ bool Game::init(const string& title, int width, int height) {
     g_textureManager = new TextureManager();
     g_textRenderer = new TextRenderer(g_renderer,"font/PatuaOne-Regular.ttf",FONT_SIZE);
     g_textRendererTile = new TextRenderer(g_renderer,"font/Daydream.ttf",FONT_SIZE_TILE);
+    g_textRendererScore = new TextRenderer(g_renderer,"font/Copperplate_Gothic_Bold.ttf",FONT_SIZE_SCORE);
 
     createMussel();
     createCreatures();
@@ -160,6 +162,7 @@ bool Game::init(const string& title, int width, int height) {
     g_explosion = new Explosion(g_textureManager);
     g_time = new Time(g_textureManager,g_textRenderer);
     g_score = new Score(g_textureManager,g_textRenderer);
+    g_gameover = new GameOver("highscore",g_textureManager);
     g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT);
 
     struct TextureData {
@@ -173,6 +176,7 @@ bool Game::init(const string& title, int width, int height) {
         {"creature_3", "image/creature_3.png"},
         {"creature_4", "image/creature_4.png"},
         {"background", "image/background.png"},
+        {"scoreboard", "image/scoreboard.png"},
         {"mussel", "image/mussel.png"},
         {"fisher", "image/fisher.png"},
         {"button","image/button.png"},
@@ -181,10 +185,10 @@ bool Game::init(const string& title, int width, int height) {
         {"hook", "image/hook.png"},
         {"coin", "image/coin.png"},
         {"time", "image/time.png"},
-        {"menu","image/menu.png"},
-        {"help","image/help.png"},
-        {"home","image/home.png"},
-        {"box","image/box.png"},
+        {"menu", "image/menu.png"},
+        {"help", "image/help.png"},
+        {"home", "image/home.png"},
+        {"box", "image/box.png"},
 
         // Tải texture explosion
         {"1","image/explosion/Explosion_1.png"},
@@ -209,8 +213,7 @@ bool Game::init(const string& title, int width, int height) {
             cerr << "Failed to load " << texture.id << " texture!" << endl;
         }
     }
-
-    g_soundOn = false;
+    g_soundOn = true;
     g_musicOn = false;
     g_isRunning = true;
     g_gameState = MENU;
@@ -238,16 +241,19 @@ void Game::handleMenuEvents() {
 
             // Kiểm tra click vào nút Play
             if (x >= g_screenWidth / 2 - 90 && x <= g_screenWidth / 2 + 90 && y >= 250 && y <= 310) {
+                g_sound->playClick(g_soundOn);
                 g_gameState = PLAY;
             }
 
             // Kiểm tra click vào nút Help
             if (x >= g_screenWidth / 2 - 90 && x <= g_screenWidth / 2 + 90 && y >= 320 && y <= 380) {
+                g_sound->playClick(g_soundOn);
                 g_gameState = HELP;
             }
 
             // Kiểm tra click vào nút Exit
             if (x >= g_screenWidth / 2 - 90 && x <= g_screenWidth / 2 + 90 && y >= 380 && y <= 450) {
+                g_sound->playClick(g_soundOn);
                 g_gameState = EXIT;
                 g_isRunning = false;
             }
@@ -266,11 +272,36 @@ void Game::handleHelpEvents() {
         SDL_GetMouseState(&x, &y);
         if (event.type == SDL_MOUSEBUTTONDOWN) {
             if (x >= 44 && x <= 77 && y >= 251 && y <= 284) {
+                    g_sound->playClick(g_soundOn);
                     g_gameState = MENU;
             }
         }
     }
 
+}
+
+void Game::handleGameOverEvents() {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            g_gameState = EXIT;
+            g_isRunning = false;
+        }
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+        if (event.type == SDL_MOUSEBUTTONDOWN) {
+            if(x >= 233 && x <= 367 && y >= 399 && y <= 455) {
+                g_sound->playClick(g_soundOn);
+                g_gameState = PLAY;
+            }
+
+            if(x >= 431 && x <= 565 && y >= 399 && y <= 455) {
+                g_sound->playClick(g_soundOn);
+                g_gameState = EXIT;
+                g_isRunning = false;
+            }
+        }
+    }
 }
 
 void Game::handleEvents() {
@@ -295,9 +326,13 @@ void Game::handleEvents() {
 
 void Game::update() {
     if(g_gameState == PLAY && !g_pause){
-        if(g_numberEntity == 0) {g_isRunning = false;}
         g_time->update();
-        g_isRunning = g_time->isRunning();
+        if(g_numberEntity == 0 || g_time->getTime() == 0) {
+            g_gameState = GAMEOVER;
+            g_gameover->loadHighScore();
+            g_gameover->updateHighScore(g_score->getScore());
+            g_gameover->saveHighScore();
+        }
 
         if(g_boxCollected == true ){
             delete g_box;
@@ -346,6 +381,7 @@ void Game::update() {
             SDL_Point hookTip = g_hook->getTipPosition();
             if(!g_box->isCollected() && SDL_PointInRect(&hookTip, &g_box->getRect())){
                 g_hook->attachObject(0,g_box->getRect().w,"box");
+                g_sound->playBox(g_soundOn);
             }
         }
 
@@ -467,7 +503,7 @@ void Game::render() {
         g_textureManager->draw("help",0,200,800,400,g_renderer);
         SDL_RenderPresent(g_renderer);
     }
-    if (g_gameState == PLAY) {
+    if (g_gameState == PLAY || g_gameState == GAMEOVER) {
         g_textureManager->draw("background",0,0,g_screenWidth,g_screenHeight,g_renderer);
         g_textureManager->draw("home",g_screenWidth / 2 - HOME_RADIUS,HOME_RADIUS,HOME_RADIUS,HOME_RADIUS,g_renderer);
         g_textureManager->draw("fisher",g_screenWidth / 2 - FISHER_WIDTH / 2 - 44,FISHER_DISTANT,FISHER_WIDTH,FISHER_HEIGHT,g_renderer);
@@ -503,8 +539,20 @@ void Game::render() {
                 g_buff = "null";
             }
         }
+
+        if (g_gameState == GAMEOVER) {
+            g_pause = true;
+            SDL_Color textcolor = {0,0,0,0};
+            string score = to_string(g_score->getScore());
+            string highscore = to_string(g_gameover->getHighScore());
+            g_gameover->render(g_renderer);
+            g_textRendererScore->renderText(score, textcolor, 460, 309);
+            g_textRendererScore->renderText(highscore, textcolor, 460, 346);
+        }
+
         SDL_RenderPresent(g_renderer);
     }
+
 }
 
 void Game::clean() {
@@ -534,6 +582,8 @@ void Game::clean() {
 
     SDL_DestroyRenderer(g_renderer);
     SDL_DestroyWindow(g_window);
+    Mix_CloseAudio();
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 }

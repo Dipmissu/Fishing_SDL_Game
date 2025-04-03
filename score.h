@@ -1,5 +1,6 @@
 // score.h
-#pragma once
+#ifndef SCORE_H
+#define SCORE_H
 
 #include <SDL.h>
 #include <string>
@@ -24,5 +25,8 @@ public:
     int getScore() const {return g_score;}
     void render(SDL_Renderer* renderer);
 };
+
+#endif // SCORE_H
+
 
 

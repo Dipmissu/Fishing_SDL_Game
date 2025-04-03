@@ -3,7 +3,6 @@
 
 Time::Time (TextureManager* textureManager, TextRenderer* textRenderer) :
     g_timeLeft(TIME),
-    g_running(true),
     g_lastTime(0),
     g_textureManager(textureManager),
     g_textRenderer(textRenderer){}
@@ -20,7 +19,7 @@ void Time::update(){
 
     if(g_timeLeft <= 0){
         g_timeLeft = 0;
-        g_running = false;
+        //g_running = false;
     }
 }
 

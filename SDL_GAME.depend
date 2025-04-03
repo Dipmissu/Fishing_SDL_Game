@@ -8,7 +8,7 @@
 	<iostream>
 	<string>
 
-1743478377 d:\study\fisher\sdl_game\hook.h
+1743652463 d:\study\fisher\sdl_game\hook.h
 	<SDL.h>
 	<string>
 
@@ -16,7 +16,7 @@
 	"texturemanager.h"
 	"constants.h"
 
-1743524783 d:\study\fisher\sdl_game\texturemanager.h
+1743652651 d:\study\fisher\sdl_game\texturemanager.h
 	<SDL.h>
 	<SDL_image.h>
 	<string>
@@ -27,17 +27,17 @@
 	"constants.h"
 	<cstdlib>
 
-1743528945 d:\study\fisher\sdl_game\creature.h
+1743652463 d:\study\fisher\sdl_game\creature.h
 	<SDL.h>
 	<string>
 	"texturemanager.h"
 
-1743610061 source:d:\study\fisher\sdl_game\main.cpp
+1743661278 source:d:\study\fisher\sdl_game\main.cpp
 	"game.h"
 	"constants.h"
 	<iostream>
 
-1743612252 d:\study\fisher\sdl_game\game.h
+1743660965 d:\study\fisher\sdl_game\game.h
 	<SDL.h>
 	<vector>
 	<string>
@@ -48,12 +48,13 @@
 	"score.h"
 	"sound.h"
 	"mussel.h"
+	"gameover.h"
 	"creature.h"
 	"explosion.h"
 	"texturemanager.h"
 	"textrenderer.h"
 
-1743528945 d:\study\fisher\sdl_game\mussel.h
+1743652463 d:\study\fisher\sdl_game\mussel.h
 	<SDL.h>
 	<string>
 	"texturemanager.h"
@@ -61,10 +62,11 @@
 1743528945 source:d:\study\fisher\sdl_game\mussel.cpp
 	"mussel.h"
 
-1743612976 source:d:\study\fisher\sdl_game\game.cpp
+1743661538 source:d:\study\fisher\sdl_game\game.cpp
 	"game.h"
 	"sound.h"
 	"score.h"
+	"gameover.h"
 	"constants.h"
 	"textrenderer.h"
 	<ctime>
@@ -73,10 +75,10 @@
 	<iostream>
 	<sstream>
 
-1743612627 d:\study\fisher\sdl_game\constants.h
+1743661555 d:\study\fisher\sdl_game\constants.h
 	<string>
 
-1743064468 source:d:\study\fisher\sdl_game\textrenderer.cpp
+1743659544 source:d:\study\fisher\sdl_game\textrenderer.cpp
 	"textrenderer.h"
 	<iostream>
 
@@ -91,19 +93,19 @@
 	<string>
 	<iostream>
 
-1743308282 d:\study\fisher\sdl_game\score.h
+1743652463 d:\study\fisher\sdl_game\score.h
 	<SDL.h>
 	<string>
 	"texturemanager.h"
 	"textrenderer.h"
 
-1743526752 d:\study\fisher\sdl_game\time.h
+1743653776 d:\study\fisher\sdl_game\time.h
 	<SDL.h>
 	<string>
 	"texturemanager.h"
 	"textrenderer.h"
 
-1743526752 source:d:\study\fisher\sdl_game\time.cpp
+1743653776 source:d:\study\fisher\sdl_game\time.cpp
 	"time.h"
 	"constants.h"
 
@@ -111,25 +113,37 @@
 	"explosion.h"
 	"constants.h"
 
-1743359839 d:\study\fisher\sdl_game\explosion.h
+1743652463 d:\study\fisher\sdl_game\explosion.h
 	<SDL.h>
 	"constants.h"
 	"texturemanager.h"
 
-1743436139 source:d:\study\fisher\sdl_game\sound.cpp
+1743657436 source:d:\study\fisher\sdl_game\sound.cpp
 	"sound.h"
 
-1743436139 d:\study\fisher\sdl_game\sound.h
+1743657426 d:\study\fisher\sdl_game\sound.h
 	<SDL_mixer.h>
 
-1743529090 source:d:\study\fisher\sdl_game\box.cpp
+1743652555 source:d:\study\fisher\sdl_game\box.cpp
 	"box.h"
 	"constants.h"
 	<cstdlib>
 	<vector>
 
-1743525855 d:\study\fisher\sdl_game\box.h
+1743652463 d:\study\fisher\sdl_game\box.h
 	<SDL.h>
 	<string>
 	"textureManager.h"
+
+1743654537 d:\study\fisher\sdl_game\gameover.h
+	<SDL.h>
+	<string>
+	<iostream>
+	<fstream>
+	"texturemanager.h"
+
+1743655491 source:d:\study\fisher\sdl_game\gameover.cpp
+	"gameover.h"
+	"constants.h"
+	<iostream>
 

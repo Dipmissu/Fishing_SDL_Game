@@ -1,5 +1,6 @@
 // mussel.h
-#pragma once
+#ifndef MUSSEL_H
+#define MUSSEL_H
 
 #include <SDL.h>
 #include <string>
@@ -31,3 +32,6 @@ public:
     string getPath() const {return g_path; }
 
 };
+
+#endif // MUSSEL_
+

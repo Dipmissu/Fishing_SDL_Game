@@ -55,9 +55,9 @@ void Box::render(SDL_Renderer* renderer){
     if(!g_collected){
         g_textureManager->draw("box",g_rect.x,g_rect.y,BOX_RADIUS,BOX_RADIUS,renderer);
     } else {
-        if(g_state == "x2") g_textureManager->draw("x2",BOX_X,BOX_Y,BOX_W,BOX_H,renderer);
-        if(g_state == "minus") g_textureManager->draw("minus",BOX_X,BOX_Y,BOX_W,BOX_H,renderer);
-        if(g_state == "extratime") g_textureManager->draw("extratime",BOX_X,BOX_Y,BOX_W,BOX_H,renderer);
+        if(g_state == "x2") g_textureManager->draw("x2",BOX_X,BOX_Y,BOX_WIDTH,BOX_HIGH,renderer);
+        if(g_state == "minus") g_textureManager->draw("minus",BOX_X,BOX_Y,BOX_WIDTH,BOX_HIGH,renderer);
+        if(g_state == "extratime") g_textureManager->draw("extratime",BOX_X,BOX_Y,BOX_WIDTH,BOX_HIGH,renderer);
     }
 }
 

@@ -3,26 +3,30 @@
 
 Sound::Sound(){
     //timeSound = Mix_LoadWAV("sound/time.wav");
-    //coinSound = Mix_LoadWAV("sound/coin.wav");
-    //grabBackSound = Mix_LoadWAV("sound/grabback.wav");
     grabSound = Mix_LoadWAV("sound/grab.wav");
+    clickSound = Mix_LoadWAV("sound/click.wav");
+    boxSound = Mix_LoadWAV("sound/box.wav");
     explosionSound = Mix_LoadWAV("sound/explosion.wav");
     backgroundSound = Mix_LoadMUS("sound/background.mp3");
 }
 
 Sound::~Sound(){
-    //Mix_FreeChunk(timeSound);
     //Mix_FreeChunk(coinSound);
-    //Mix_FreeChunk(grabBackSound);
+    Mix_FreeChunk(boxSound);
     Mix_FreeChunk(grabSound);
+    Mix_FreeChunk(clickSound);
     Mix_FreeChunk(explosionSound);
     Mix_FreeMusic(backgroundSound);
     Mix_CloseAudio();
 }
 
-/*Sound::playCoin(bool sound){
-    if(sound) Mix_PlayChannel(-1, coinSound, 0);
-}*/
+void Sound::playBox(bool sound){
+    if(sound) Mix_PlayChannel(-1, boxSound, 0);
+}
+
+void Sound::playClick(bool sound){
+    if(sound) Mix_PlayChannel(-1, clickSound, 0);
+}
 
 void Sound::playExplosion(bool sound){
     if(sound) Mix_PlayChannel(-1, explosionSound, 0);

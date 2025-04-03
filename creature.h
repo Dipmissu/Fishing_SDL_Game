@@ -1,5 +1,6 @@
 // creature.h
-#pragma once
+#ifndef CREATURE_H
+#define CREATURE_H
 
 #include <SDL.h>
 #include <string>
@@ -37,3 +38,7 @@ public:
     void setValue();
     bool isCollected() const { return g_collected; }
 };
+
+#endif // CREATURE_H
+
+

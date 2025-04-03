@@ -1,3 +1,4 @@
+// constants.h
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
@@ -6,14 +7,14 @@
 using namespace std;
 
 // game
-const int MINUTE = 5;
+const int MINUTE = 0;
 const int TIME = MINUTE * 3600;
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const string TITLE = "Fishing Game!";
 
 // mussel
-const int MUSSEL_NUMBER = 6;
+const int MUSSEL_NUMBER = 4;
 
 // creatures
 const int FRAME_COUNT = 6;
@@ -30,8 +31,8 @@ const int FRAME_DELAY = 1;
 // box
 const int BOX_X = 100;
 const int BOX_Y = 200;
-const int BOX_W = 600;
-const int BOX_H = 300;
+const int BOX_WIDTH = 600;
+const int BOX_HIGH = 300;
 const int BOX_RADIUS = 40;
 
 // fisher
@@ -58,6 +59,7 @@ const int TIMER_RADIUS = 20;
 // font
 const int FONT_SIZE = 18;
 const int FONT_SIZE_TILE = 32;
+const int FONT_SIZE_SCORE = 18;
 
 
 #endif // CONSTANTS_H

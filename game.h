@@ -1,5 +1,6 @@
 // game.h
-#pragma once
+#ifndef GAME_H
+#define GAME_H
 
 #include <SDL.h>
 #include <vector>
@@ -11,6 +12,7 @@
 #include "score.h"
 #include "sound.h"
 #include "mussel.h"
+#include "gameover.h"
 #include "creature.h"
 #include "explosion.h"
 #include "texturemanager.h"
@@ -18,7 +20,7 @@
 
 using namespace std;
 
-enum GameState {MENU, PLAY, HELP, EXIT};
+enum GameState {MENU, PLAY, HELP, GAMEOVER, EXIT};
 
 class Game {
 private:
@@ -27,6 +29,7 @@ private:
     int g_timeLeft;
     int g_numberEntity;
     bool g_pause;
+    bool g_ending;
     bool g_soundOn;
     bool g_musicOn;
     bool g_isRunning;
@@ -46,6 +49,7 @@ private:
     Box* g_box;
     Hook* g_hook;
     Sound* g_sound;
+    GameOver* g_gameover;
     Explosion* g_explosion;
     vector<Mussel*> g_mussel;
     vector<Creature*> g_creatures;
@@ -54,6 +58,7 @@ private:
     Score* g_score;
     TextRenderer* g_textRenderer;
     TextRenderer* g_textRendererTile;
+    TextRenderer* g_textRendererScore;
     TextureManager* g_textureManager;
 
     GameState g_gameState;
@@ -74,9 +79,13 @@ public:
     void renderMenu();
     void handleMenuEvents();
     void handleHelpEvents();
+    void handleGameOverEvents();
 
     SDL_Renderer* getRenderer() const { return g_renderer; }
     TextureManager* getTextureManager() const { return g_textureManager; }
     int getScreenWidth() const { return g_screenWidth; }
     int getScreenHeight() const { return g_screenHeight; }
 };
+
+#endif // GAME_H
+

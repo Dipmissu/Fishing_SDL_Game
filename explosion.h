@@ -1,5 +1,6 @@
 // explosion.h
-#pragma once
+#ifndef EXPLOSION_H
+#define EXPLOSION_H
 
 #include <SDL.h>
 #include "constants.h"
@@ -23,4 +24,7 @@ public:
     void init(int x, int y, int size);
     void isAttached();
 };
+
+#endif // EXPLOSION_H
+
 

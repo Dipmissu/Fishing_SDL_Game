@@ -1,5 +1,6 @@
 // box.h
-#pragma once
+#ifndef BOX_H
+#define BOX_H
 
 #include <SDL.h>
 #include <string>
@@ -30,3 +31,5 @@ public:
     const SDL_Rect& getRect() const { return g_rect; }
 
 };
+
+#endif // BOX_H

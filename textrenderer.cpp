@@ -7,7 +7,7 @@ TextRenderer::TextRenderer(SDL_Renderer* renderer, const string& fontPath, int f
     this->renderer = renderer;
     font = TTF_OpenFont(fontPath.c_str(), fontSize);
     if (!font) {
-        cerr << "Không thể tải font! " << TTF_GetError() << endl;
+        cerr << "Fail to load font! " << TTF_GetError() << endl;
         exit(-1);
     }
 }

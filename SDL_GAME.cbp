@@ -41,6 +41,8 @@
 		<Unit filename="explosion.h" />
 		<Unit filename="game.cpp" />
 		<Unit filename="game.h" />
+		<Unit filename="gameover.cpp" />
+		<Unit filename="gameover.h" />
 		<Unit filename="hook.cpp" />
 		<Unit filename="hook.h" />
 		<Unit filename="main.cpp" />

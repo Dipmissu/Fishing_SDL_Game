@@ -1,5 +1,6 @@
 // time.h
-#pragma once
+#ifndef TIME_H
+#define TIME_H
 
 #include <SDL.h>
 #include <string>
@@ -10,7 +11,7 @@ class Time{
 private:
     int g_timeLeft;
     int g_lastTime;
-    bool g_running;
+    //bool g_running;
 
     TextureManager* g_textureManager;
     TextRenderer* g_textRenderer;
@@ -22,6 +23,9 @@ public:
     void update();
     void addTime(int time);
     int getTime() const {return g_timeLeft;}
-    bool isRunning() const {return g_running;}
+    //bool isRunning() const {return g_running;}
 
 };
+
+#endif // TIME_H
+

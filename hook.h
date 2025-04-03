@@ -1,5 +1,6 @@
 // hook.h
-#pragma once
+#ifndef HOOK_H
+#define HOOK_H
 
 #include <SDL.h>
 #include <string>
@@ -42,3 +43,6 @@ public:
     double getAngle() const {return g_angle;}
     SDL_Point getTipPosition() const { return g_tip; }
 };
+
+#endif // HOOK_H
+
