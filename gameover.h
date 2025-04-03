@@ -6,7 +6,6 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "texturemanager.h"
 
 using namespace std;
 
@@ -14,16 +13,14 @@ class GameOver {
 private:
     int highScore;
     string fileName;
-    TextureManager* g_textureManager;
 public:
-    GameOver(const string &file, TextureManager* textureManager);
+    GameOver(const string &file);
     ~GameOver();
 
     int getHighScore() const;
     void updateHighScore(int newScore);
     void saveHighScore() const;
     void loadHighScore();
-    void render(SDL_Renderer* renderer);
 };
 
 

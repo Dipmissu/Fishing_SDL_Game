@@ -20,7 +20,7 @@
 
 using namespace std;
 
-enum GameState {MENU, PLAY, HELP, GAMEOVER, EXIT};
+enum GameState {MENU, PLAY, HELP, GAMEOVER, SETTING, EXIT};
 
 class Game {
 private:
@@ -77,6 +77,7 @@ public:
     bool running() const;
     GameState getGameState() const;
     void renderMenu();
+    void handleSetting();
     void handleMenuEvents();
     void handleHelpEvents();
     void handleGameOverEvents();

@@ -11,6 +11,11 @@ void Time::addTime(int time){
     g_timeLeft += time;
 }
 
+void Time::reset() {
+    g_timeLeft = TIME;
+    g_lastTime = 0;
+}
+
 void Time::update(){
     Uint32 currentTime = SDL_GetTicks();
     float deltaTime = (currentTime - g_lastTime) / 1000.0f;

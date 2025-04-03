@@ -20,6 +20,7 @@ Game::Game() :
     g_numberEntity(0),
     g_isRunning(false),
     g_pause(false),
+    g_ending(false),
     g_touchPlay(false),
     g_touchHelp(false),
     g_touchExit(false),
@@ -158,11 +159,11 @@ bool Game::init(const string& title, int width, int height) {
     createMussel();
     createCreatures();
 
-    g_sound = new Sound();
+    g_sound = new Sound(g_textureManager);
     g_explosion = new Explosion(g_textureManager);
     g_time = new Time(g_textureManager,g_textRenderer);
     g_score = new Score(g_textureManager,g_textRenderer);
-    g_gameover = new GameOver("highscore",g_textureManager);
+    g_gameover = new GameOver("highscore");
     g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT);
 
     struct TextureData {
@@ -177,6 +178,7 @@ bool Game::init(const string& title, int width, int height) {
         {"creature_4", "image/creature_4.png"},
         {"background", "image/background.png"},
         {"scoreboard", "image/scoreboard.png"},
+        {"setting", "image/setting.png"},
         {"mussel", "image/mussel.png"},
         {"fisher", "image/fisher.png"},
         {"button","image/button.png"},
@@ -205,7 +207,16 @@ bool Game::init(const string& title, int width, int height) {
         // Tải texture box
         {"x2","image/x2.png"},
         {"minus","image/minus.png"},
-        {"extratime","image/extratime.png"}
+        {"extratime","image/extratime.png"},
+
+        // Tải texture sound
+        {"minusvolume", "image/minusvolume.png"},
+        {"plusvolume", "image/plusvolume.png"},
+        {"speaker_1","image/speaker_1.png"},
+        {"speaker_2","image/speaker_2.png"},
+        {"speaker_3","image/speaker_3.png"},
+        {"no_music","image/no_music.png"},
+        {"music","image/music.png"}
     };
 
     for (const auto& texture : textures) {
@@ -213,6 +224,8 @@ bool Game::init(const string& title, int width, int height) {
             cerr << "Failed to load " << texture.id << " texture!" << endl;
         }
     }
+
+    g_ending = false;
     g_soundOn = true;
     g_musicOn = false;
     g_isRunning = true;
@@ -292,6 +305,8 @@ void Game::handleGameOverEvents() {
         if (event.type == SDL_MOUSEBUTTONDOWN) {
             if(x >= 233 && x <= 367 && y >= 399 && y <= 455) {
                 g_sound->playClick(g_soundOn);
+                g_pause = false;
+                g_score->reset();
                 g_gameState = PLAY;
             }
 
@@ -304,9 +319,37 @@ void Game::handleGameOverEvents() {
     }
 }
 
+void Game::handleSetting() {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            g_gameState = EXIT;
+            g_isRunning = false;
+        }
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+        if (event.type == SDL_MOUSEBUTTONDOWN) {
+            if(x >= 233 && x <= 368 && y >= 399 && y <= 455) {
+                g_sound->playClick(g_soundOn);
+                g_pause = false;
+                g_gameState = PLAY;
+            }
+
+            if(x >= 424 && x <= 559 && y >= 399 && y <= 455) {
+                g_sound->playClick(g_soundOn);
+                g_pause = false;
+                g_gameState = MENU;
+                g_ending = true;
+            }
+        }
+    }
+}
+
 void Game::handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
+        int x, y;
+        SDL_GetMouseState(&x, &y);
         switch (event.type) {
             case SDL_QUIT:
                 g_isRunning = false;
@@ -316,18 +359,32 @@ void Game::handleEvents() {
                     if(g_hook->hasReturned()) g_sound->playGrab(g_soundOn);
                     g_hook->startExtend();
                 }
-                if(event.key.keysym.sym == SDLK_p){
+                if(event.key.keysym.sym == SDLK_p) {
                     g_pause = !g_pause;
                 }
                 break;
+            case SDL_MOUSEBUTTONDOWN:
+                if(x >= 380 && x <= 420 && y >= 20 && y <= 40) {
+                    g_sound->playClick(g_soundOn);
+                    g_gameState = SETTING;
+                }
         }
     }
 }
 
 void Game::update() {
-    if(g_gameState == PLAY && !g_pause){
+    if(g_ending == true) {
+        g_numberEntity = 0;
+        createMussel();
+        createCreatures();
+        g_ending = false;
+        g_time->reset();
+        //g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT);
+    }
+    if(g_gameState == PLAY && g_pause == false ){
         g_time->update();
         if(g_numberEntity == 0 || g_time->getTime() == 0) {
+            g_ending = true;
             g_gameState = GAMEOVER;
             g_gameover->loadHighScore();
             g_gameover->updateHighScore(g_score->getScore());
@@ -503,7 +560,7 @@ void Game::render() {
         g_textureManager->draw("help",0,200,800,400,g_renderer);
         SDL_RenderPresent(g_renderer);
     }
-    if (g_gameState == PLAY || g_gameState == GAMEOVER) {
+    if (g_gameState == PLAY || g_gameState == GAMEOVER || g_gameState == SETTING) {
         g_textureManager->draw("background",0,0,g_screenWidth,g_screenHeight,g_renderer);
         g_textureManager->draw("home",g_screenWidth / 2 - HOME_RADIUS,HOME_RADIUS,HOME_RADIUS,HOME_RADIUS,g_renderer);
         g_textureManager->draw("fisher",g_screenWidth / 2 - FISHER_WIDTH / 2 - 44,FISHER_DISTANT,FISHER_WIDTH,FISHER_HEIGHT,g_renderer);
@@ -540,12 +597,36 @@ void Game::render() {
             }
         }
 
+        if(g_gameState == SETTING) {
+            g_pause = true;
+            g_textureManager->draw("setting",160,200,480,320,g_renderer);
+            g_textureManager->draw("speaker_1",226,301,SPEAKER_RADIUS,SPEAKER_RADIUS,g_renderer);
+            g_textureManager->draw("no_music",220,360,SPEAKER_RADIUS,SPEAKER_RADIUS,g_renderer);
+
+            SDL_Rect rectSound = {300,305,240,18};
+            SDL_RenderFillRect(g_renderer, &rectSound);
+            SDL_Rect rectSoundBackground = {300,305,120,18};
+            SDL_SetRenderDrawColor(g_renderer, 163, 73, 164, 255);
+            SDL_RenderFillRect(g_renderer, &rectSoundBackground);
+            g_textureManager->draw("minusvolume",274,304,20,20,g_renderer);
+            g_textureManager->draw("plusvolume",546,304,20,20,g_renderer);
+
+            SDL_Rect rectMusic = {300,364,240,18};
+            SDL_SetRenderDrawColor(g_renderer, 0,0,0,0);
+            SDL_RenderFillRect(g_renderer, &rectMusic);
+            SDL_Rect rectMusicBackground = {300,364,120,18};
+            SDL_SetRenderDrawColor(g_renderer, 163, 73, 164, 255);
+            SDL_RenderFillRect(g_renderer, &rectMusicBackground);
+            g_textureManager->draw("minusvolume",274,363,20,20,g_renderer);
+            g_textureManager->draw("plusvolume",546,363,20,20,g_renderer);
+        }
+
         if (g_gameState == GAMEOVER) {
             g_pause = true;
             SDL_Color textcolor = {0,0,0,0};
             string score = to_string(g_score->getScore());
             string highscore = to_string(g_gameover->getHighScore());
-            g_gameover->render(g_renderer);
+            g_textureManager->draw("scoreboard",160,200,480,320,g_renderer);
             g_textRendererScore->renderText(score, textcolor, 460, 309);
             g_textRendererScore->renderText(highscore, textcolor, 460, 346);
         }

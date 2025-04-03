@@ -1,23 +1,42 @@
 // sound.cpp
 #include "sound.h"
 
-Sound::Sound(){
-    //timeSound = Mix_LoadWAV("sound/time.wav");
+Sound::Sound(TextureManager* textureManager):
+    soundVolume(64),
+    musicVolume(64),
+    g_textureManager(textureManager) {
+    boxSound = Mix_LoadWAV("sound/box.wav");
     grabSound = Mix_LoadWAV("sound/grab.wav");
     clickSound = Mix_LoadWAV("sound/click.wav");
-    boxSound = Mix_LoadWAV("sound/box.wav");
     explosionSound = Mix_LoadWAV("sound/explosion.wav");
     backgroundSound = Mix_LoadMUS("sound/background.mp3");
 }
 
 Sound::~Sound(){
-    //Mix_FreeChunk(coinSound);
     Mix_FreeChunk(boxSound);
     Mix_FreeChunk(grabSound);
     Mix_FreeChunk(clickSound);
     Mix_FreeChunk(explosionSound);
     Mix_FreeMusic(backgroundSound);
     Mix_CloseAudio();
+}
+
+void Sound::settingSound(int value) {
+    soundVolume = value;
+    if(soundVolume == 0) {
+        Mix_HaltChannel(-1);
+    } else {
+        Mix_Volume(-1, soundVolume);
+    }
+}
+
+void Sound::settingMusic(int value) {
+    musicVolume = value;
+    if(musicVolume == 0) {
+        Mix_HaltMusic();
+    } else {
+        Mix_VolumeMusic(musicVolume);
+    }
 }
 
 void Sound::playBox(bool sound){
@@ -38,4 +57,7 @@ void Sound::playGrab(bool sound){
 
 void Sound::playBackgroundMusic(bool sound){
     if(sound) Mix_PlayMusic(backgroundSound, -1);
+}
+
+void Sound::render(SDL_Renderer* renderer) {
 }

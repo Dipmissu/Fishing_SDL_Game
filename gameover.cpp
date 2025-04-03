@@ -3,10 +3,9 @@
 #include "constants.h"
 #include <iostream>
 
-GameOver::GameOver(const string& file, TextureManager* textureManager):
+GameOver::GameOver(const string& file):
     fileName(file),
-    highScore(0),
-    g_textureManager(textureManager){
+    highScore(0){
         loadHighScore();
     }
 
@@ -38,6 +37,3 @@ void GameOver::saveHighScore() const{
     }
 }
 
-void GameOver::render(SDL_Renderer* renderer){
-    g_textureManager->draw("scoreboard",160,200,480,320,renderer);
-}

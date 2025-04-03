@@ -22,6 +22,8 @@ int main(int argc, char* argv[]) {
             game.handleHelpEvents();
         } else if (game.getGameState() == GAMEOVER) {
             game.handleGameOverEvents();
+        } else if (game.getGameState() == SETTING) {
+            game.handleSetting();
         }
         game.update();
         game.render();

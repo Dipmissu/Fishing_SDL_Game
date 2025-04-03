@@ -7,18 +7,18 @@
 using namespace std;
 
 // game
-const int MINUTE = 0;
+const int MINUTE = 2;
 const int TIME = MINUTE * 3600;
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const string TITLE = "Fishing Game!";
 
 // mussel
-const int MUSSEL_NUMBER = 4;
+const int MUSSEL_NUMBER = 8;
 
 // creatures
 const int FRAME_COUNT = 6;
-const int CREATURE_NUMBER = 0;
+const int CREATURE_NUMBER = 10;
 const int CREATURE_RADIUS = 48;
 
 // hook
@@ -39,6 +39,9 @@ const int BOX_RADIUS = 40;
 const int FISHER_DISTANT = 80;
 const int FISHER_WIDTH = 120;
 const int FISHER_HEIGHT = 120;
+
+// sound
+const int SPEAKER_RADIUS = 25;
 
 // board
 const int BOARD_WIDTH = 80;
