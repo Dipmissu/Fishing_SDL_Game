@@ -28,6 +28,8 @@ private:
     SDL_Renderer* g_renderer;
     int g_timeLeft;
     int g_numberEntity;
+    int g_soundVolume;
+    int g_musicVolume;
     bool g_pause;
     bool g_ending;
     bool g_soundOn;

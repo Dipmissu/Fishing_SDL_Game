@@ -16,10 +16,9 @@ private:
     Mix_Chunk* clickSound;
     Mix_Chunk* explosionSound;
     Mix_Music* backgroundSound;
-    TextureManager* g_textureManager;
 
 public:
-    Sound(TextureManager* textureManager);
+    Sound();
     ~Sound();
     void settingSound(int value);
     void settingMusic(int value);

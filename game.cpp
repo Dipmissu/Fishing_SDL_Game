@@ -18,6 +18,8 @@ Game::Game() :
     g_renderer(nullptr),
     g_lastTime(0),
     g_numberEntity(0),
+    g_soundVolume(64),
+    g_musicVolume(64),
     g_isRunning(false),
     g_pause(false),
     g_ending(false),
@@ -159,12 +161,12 @@ bool Game::init(const string& title, int width, int height) {
     createMussel();
     createCreatures();
 
-    g_sound = new Sound(g_textureManager);
+    g_sound = new Sound();
     g_explosion = new Explosion(g_textureManager);
     g_time = new Time(g_textureManager,g_textRenderer);
     g_score = new Score(g_textureManager,g_textRenderer);
     g_gameover = new GameOver("highscore");
-    g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT);
+    g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT, g_textureManager);
 
     struct TextureData {
         string id;
@@ -227,7 +229,7 @@ bool Game::init(const string& title, int width, int height) {
 
     g_ending = false;
     g_soundOn = true;
-    g_musicOn = false;
+    g_musicOn = true;
     g_isRunning = true;
     g_gameState = MENU;
     g_touchPlay = false;
@@ -341,6 +343,34 @@ void Game::handleSetting() {
                 g_gameState = MENU;
                 g_ending = true;
             }
+
+            // chỉnh sound
+            if(x >= 226 && x <= 251 && y >= 301 && y <= 326) {
+                g_sound->playClick(g_soundOn);
+                if(g_soundVolume != 0) g_soundVolume = 0;
+            }
+            if(x >= 274 && x <= 294 && y >= 304 && y <= 324) {
+                g_sound->playClick(g_soundOn);
+                if(g_soundVolume >= 32) g_soundVolume -= 32;
+            }
+            if(x >= 546 && x <= 566 && y >= 304 && y <= 324) {
+                g_sound->playClick(g_soundOn);
+                if(g_soundVolume <= 96) g_soundVolume += 32;
+            }
+
+            // chỉnh music
+            if(x >= 220 && x <= 245 && y >= 360 && y <= 385) {
+                g_sound->playClick(g_soundOn);
+                if(g_musicVolume != 0) g_musicVolume = 0;
+            }
+            if(x >= 274 && x <= 294 && y >= 363 && y <= 383) {
+                g_sound->playClick(g_soundOn);
+                if(g_musicVolume >= 32) g_musicVolume -= 32;
+            }
+            if(x >= 546 && x <= 566 && y >= 363 && y <= 383) {
+                g_sound->playClick(g_soundOn);
+                if(g_musicVolume <= 96) g_musicVolume += 32;
+            }
         }
     }
 }
@@ -379,7 +409,7 @@ void Game::update() {
         createCreatures();
         g_ending = false;
         g_time->reset();
-        //g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT);
+        g_hook = new Hook(g_screenWidth / 2 - FISHER_WIDTH / 2,FISHER_DISTANT, g_textureManager);
     }
     if(g_gameState == PLAY && g_pause == false ){
         g_time->update();
@@ -400,6 +430,7 @@ void Game::update() {
         }
 
         g_hook->update();
+        g_hook->updateHook();
         g_explosion->update();
         g_box->update(g_screenWidth, g_screenHeight);
         for(auto& creature : g_creatures) creature->update(g_screenWidth, g_screenHeight);
@@ -571,8 +602,8 @@ void Game::render() {
 
         g_box->render(g_renderer);
         g_hook->render(g_renderer);
-        SDL_Point hookTip = g_hook->getTipPosition();
-        g_textureManager->drawhook("hook", hookTip.x, hookTip.y, HOOK_WIDTH, HOOK_WIDTH,g_hook->isExtending(),g_pause,g_renderer);
+        //SDL_Point hookTip = g_hook->getTipPosition();
+        //g_textureManager->drawhook("hook", hookTip.x, hookTip.y, HOOK_WIDTH, HOOK_WIDTH,g_hook->isExtending(),g_pause,g_renderer);
 
         g_score->render(g_renderer);
         g_time->render(g_renderer);
@@ -580,7 +611,7 @@ void Game::render() {
         if(g_box->isCollected()) {
             // hiển thị note
             SDL_Color note = {0,0,0,0};
-            g_textRenderer->renderText("Press P to continue!!",note,g_screenWidth / 2 - 80, 440);
+            g_textRenderer->renderText("Press P to continue!!",note,g_screenWidth / 2 - 80, 435);
             g_pause = true;
             if(g_buff == "extratime") {
                 g_time->addTime(15*60);
@@ -599,24 +630,38 @@ void Game::render() {
 
         if(g_gameState == SETTING) {
             g_pause = true;
+            g_sound->settingSound(g_soundVolume);
+            g_sound->settingMusic(g_musicVolume);
             g_textureManager->draw("setting",160,200,480,320,g_renderer);
-            g_textureManager->draw("speaker_1",226,301,SPEAKER_RADIUS,SPEAKER_RADIUS,g_renderer);
-            g_textureManager->draw("no_music",220,360,SPEAKER_RADIUS,SPEAKER_RADIUS,g_renderer);
 
-            SDL_Rect rectSound = {300,305,240,18};
-            SDL_RenderFillRect(g_renderer, &rectSound);
-            SDL_Rect rectSoundBackground = {300,305,120,18};
-            SDL_SetRenderDrawColor(g_renderer, 163, 73, 164, 255);
+            // Âm thanh
+            if(g_soundVolume == 0){
+                g_textureManager->draw("speaker_1",226,301,SPEAKER_RADIUS,SPEAKER_RADIUS,g_renderer);
+            } else if(g_soundVolume < 128) {
+                g_textureManager->draw("speaker_2",226,301,SPEAKER_RADIUS,SPEAKER_RADIUS,g_renderer);
+            } else if(g_soundVolume == 128) {
+                g_textureManager->draw("speaker_3",226,301,SPEAKER_RADIUS,SPEAKER_RADIUS,g_renderer);
+            }
+            SDL_Rect rectSoundBackground = {300,305,240,18};
             SDL_RenderFillRect(g_renderer, &rectSoundBackground);
+            SDL_Rect rectSound = {300,305,(g_soundVolume * 240) / 128,18};
+            SDL_SetRenderDrawColor(g_renderer, 163, 73, 164, 255);
+            SDL_RenderFillRect(g_renderer, &rectSound);
             g_textureManager->draw("minusvolume",274,304,20,20,g_renderer);
             g_textureManager->draw("plusvolume",546,304,20,20,g_renderer);
 
-            SDL_Rect rectMusic = {300,364,240,18};
+            // Nhạc nền
+            if(g_musicVolume == 0){
+                g_textureManager->draw("no_music",220,360,SPEAKER_RADIUS,SPEAKER_RADIUS,g_renderer);
+            } else {
+                g_textureManager->draw("music",220,360,SPEAKER_RADIUS,SPEAKER_RADIUS,g_renderer);
+            }
+            SDL_Rect rectMusicBackground = {300,364,240,18};
             SDL_SetRenderDrawColor(g_renderer, 0,0,0,0);
-            SDL_RenderFillRect(g_renderer, &rectMusic);
-            SDL_Rect rectMusicBackground = {300,364,120,18};
-            SDL_SetRenderDrawColor(g_renderer, 163, 73, 164, 255);
             SDL_RenderFillRect(g_renderer, &rectMusicBackground);
+            SDL_Rect rectMusic = {300,364,(g_musicVolume * 240) / 128,18};
+            SDL_SetRenderDrawColor(g_renderer, 163, 73, 164, 255);
+            SDL_RenderFillRect(g_renderer, &rectMusic);
             g_textureManager->draw("minusvolume",274,363,20,20,g_renderer);
             g_textureManager->draw("plusvolume",546,363,20,20,g_renderer);
         }

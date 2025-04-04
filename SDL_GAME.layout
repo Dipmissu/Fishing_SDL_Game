@@ -2,127 +2,24 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="score.h" open="1" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="555" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="hook.cpp" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="308" topLine="62" />
-		</Cursor>
-		<Folding>
-			<Collapse line="57" />
-		</Folding>
-	</File>
 	<File name="game.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1790" topLine="57" />
+			<Cursor1 position="631" topLine="25" />
 		</Cursor>
 	</File>
-	<File name="texturemanager.cpp" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+	<File name="hook.cpp" open="1" top="1" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1263" topLine="38" />
-		</Cursor>
-		<Folding>
-			<Collapse line="65" />
-		</Folding>
-	</File>
-	<File name="creature.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="924" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="box.h" open="1" top="0" tabpos="22" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="733" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="hook.h" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1169" topLine="20" />
-		</Cursor>
-	</File>
-	<File name="mussel.cpp" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="198" topLine="6" />
-		</Cursor>
-	</File>
-	<File name="time.h" open="1" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="211" topLine="1" />
-		</Cursor>
-	</File>
-	<File name="main.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="297" topLine="2" />
-		</Cursor>
-	</File>
-	<File name="textrenderer.h" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="textrenderer.cpp" open="1" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="300" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="score.cpp" open="1" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="443" topLine="6" />
-		</Cursor>
-	</File>
-	<File name="creature.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1192" topLine="41" />
-		</Cursor>
-	</File>
-	<File name="time.cpp" open="1" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="550" topLine="13" />
-		</Cursor>
-	</File>
-	<File name="gameover.h" open="1" top="0" tabpos="24" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="565" topLine="1" />
-		</Cursor>
-	</File>
-	<File name="gameover.cpp" open="1" top="0" tabpos="25" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="952" topLine="15" />
-		</Cursor>
-	</File>
-	<File name="explosion.cpp" open="1" top="0" tabpos="19" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1029" topLine="20" />
-		</Cursor>
-	</File>
-	<File name="box.cpp" open="1" top="0" tabpos="23" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1900" topLine="35" />
-		</Cursor>
-	</File>
-	<File name="game.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="20335" topLine="122" />
+			<Cursor1 position="1089" topLine="36" />
 		</Cursor>
 		<Folding>
-			<Collapse line="115" />
-			<Collapse line="302" />
-			<Collapse line="314" />
-			<Collapse line="458" />
-			<Collapse line="556" />
+			<Collapse line="91" />
+			<Collapse line="97" />
+			<Collapse line="114" />
 		</Folding>
 	</File>
-	<File name="sound.h" open="1" top="0" tabpos="20" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="sound.cpp" open="1" top="0" tabpos="21" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="519" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="constants.h" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="134" topLine="0" />
+			<Cursor1 position="832" topLine="28" />
 		</Cursor>
 	</File>
 	<File name="explosion.h" open="1" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -130,14 +27,118 @@
 			<Cursor1 position="534" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="sound.cpp" open="1" top="0" tabpos="21" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="time.h" open="1" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="680" topLine="0" />
+			<Cursor1 position="211" topLine="1" />
+		</Cursor>
+	</File>
+	<File name="box.cpp" open="1" top="0" tabpos="23" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1900" topLine="35" />
+		</Cursor>
+	</File>
+	<File name="main.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="765" topLine="5" />
+		</Cursor>
+	</File>
+	<File name="time.cpp" open="1" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="550" topLine="13" />
+		</Cursor>
+	</File>
+	<File name="explosion.cpp" open="1" top="0" tabpos="19" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1029" topLine="20" />
+		</Cursor>
+	</File>
+	<File name="box.h" open="1" top="0" tabpos="22" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="733" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="constants.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="862" topLine="23" />
+		</Cursor>
+	</File>
+	<File name="textrenderer.h" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="creature.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1192" topLine="41" />
+		</Cursor>
+	</File>
+	<File name="sound.h" open="1" top="0" tabpos="20" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="351" topLine="3" />
+		</Cursor>
+	</File>
+	<File name="gameover.h" open="1" top="0" tabpos="24" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="133" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="score.cpp" open="1" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="443" topLine="6" />
 		</Cursor>
 	</File>
 	<File name="mussel.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="736" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="mussel.cpp" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="198" topLine="6" />
+		</Cursor>
+	</File>
+	<File name="gameover.cpp" open="1" top="0" tabpos="25" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="124" topLine="11" />
+		</Cursor>
+	</File>
+	<File name="creature.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="924" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="hook.h" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="422" topLine="24" />
+		</Cursor>
+	</File>
+	<File name="score.h" open="1" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="413" topLine="4" />
+		</Cursor>
+	</File>
+	<File name="texturemanager.cpp" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1079" topLine="33" />
+		</Cursor>
+	</File>
+	<File name="game.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="13381" topLine="267" />
+		</Cursor>
+		<Folding>
+			<Collapse line="54" />
+			<Collapse line="85" />
+			<Collapse line="241" />
+			<Collapse line="278" />
+			<Collapse line="297" />
+			<Collapse line="630" />
+			<Collapse line="668" />
+		</Folding>
+	</File>
+	<File name="textrenderer.cpp" open="1" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="300" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

@@ -4,9 +4,6 @@
 
 using namespace std;
 
-double g_angle = 60;
-bool g_movingLeft = false;
-
 TextureManager::TextureManager() {}
 
 TextureManager::~TextureManager() {
@@ -39,27 +36,10 @@ void TextureManager::draw(const string& id, int x, int y, int width, int height,
     }
 }
 
-void TextureManager::drawhook(const string& id, int x, int y, int width, int height, bool extending, bool pause,
+void TextureManager::drawhook(const string& id, double g_angle, SDL_Rect& destRect, SDL_Point& rotationPoint,
                           SDL_Renderer* renderer, SDL_RendererFlip flip) {
-    SDL_Point rotationPoint = {1, 0};
-    SDL_Rect destRect = {x - 2, y, width, height};
-    if(!extending && !pause){
-        if (g_movingLeft) {
-            g_angle += 1;
-            if (g_angle >= 60) {
-                g_movingLeft = false;
-            }
-        }
-        else {
-            g_angle -= 1;
-            if (g_angle <= -60) {
-                g_movingLeft = true;
-            }
-        }
-    }
-
-    if (g_textureMap.find(id) != g_textureMap.end()) {
-        SDL_RenderCopyEx(renderer, g_textureMap[id], NULL, &destRect,g_angle, &rotationPoint, flip);
+      if (g_textureMap.find(id) != g_textureMap.end()) {
+        SDL_RenderCopyEx(renderer, g_textureMap[id], NULL, &destRect, g_angle, &rotationPoint, flip);
     }
 }
 

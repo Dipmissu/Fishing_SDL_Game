@@ -1,10 +1,9 @@
 // sound.cpp
 #include "sound.h"
 
-Sound::Sound(TextureManager* textureManager):
+Sound::Sound():
     soundVolume(64),
-    musicVolume(64),
-    g_textureManager(textureManager) {
+    musicVolume(64){
     boxSound = Mix_LoadWAV("sound/box.wav");
     grabSound = Mix_LoadWAV("sound/grab.wav");
     clickSound = Mix_LoadWAV("sound/click.wav");
@@ -32,11 +31,7 @@ void Sound::settingSound(int value) {
 
 void Sound::settingMusic(int value) {
     musicVolume = value;
-    if(musicVolume == 0) {
-        Mix_HaltMusic();
-    } else {
-        Mix_VolumeMusic(musicVolume);
-    }
+    Mix_VolumeMusic(musicVolume);
 }
 
 void Sound::playBox(bool sound){
@@ -59,5 +54,3 @@ void Sound::playBackgroundMusic(bool sound){
     if(sound) Mix_PlayMusic(backgroundSound, -1);
 }
 
-void Sound::render(SDL_Renderer* renderer) {
-}

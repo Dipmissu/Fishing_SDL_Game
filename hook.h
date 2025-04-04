@@ -4,6 +4,7 @@
 
 #include <SDL.h>
 #include <string>
+#include "texturemanager.h"
 
 using namespace std;
 
@@ -12,6 +13,7 @@ private:
     SDL_Rect g_base;
     SDL_Point g_tip;
     double g_angle;
+    double g_angleHook;
     bool g_extending;
     double g_length;
     double g_speed;
@@ -21,12 +23,14 @@ private:
     bool g_movingLeft;
     int g_attachedObjectIndex;
     bool g_returned;
+    TextureManager* g_textureManager;
 
 public:
-    Hook(int x, int y);
+    Hook(int x, int y, TextureManager* textureManager);
     ~Hook();
 
     void update();
+    void updateHook();
     void render(SDL_Renderer* renderer);
 
     void startExtend();

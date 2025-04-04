@@ -7,8 +7,9 @@
 
 using namespace std;
 
-Hook::Hook(int x, int y) :
+Hook::Hook(int x, int y, TextureManager* textureManager) :
     g_angle(ANGLE),
+    g_angleHook(60),
     g_extending(false),
     g_length(HOOK_LENGTH),
     g_speed(HOOK_SPEED),
@@ -17,7 +18,8 @@ Hook::Hook(int x, int y) :
     g_attachedMussel(false),
     g_attachedCreature(false),
     g_attachedObjectIndex(-1),
-    g_returned(true) {
+    g_returned(true),
+    g_textureManager(textureManager) {
 
     g_base = {x, y, 120, 120};
     g_tip = {x, y};
@@ -55,6 +57,17 @@ void Hook::update() {
     g_tip.y = g_base.y + g_base.h - 100 + static_cast<int>(g_length * sin(g_angle * M_PI / 180.0));
 }
 
+void Hook::updateHook() {
+    if(!g_extending){
+        if (g_movingLeft) {
+            g_angleHook += 1;
+        }
+        else {
+            g_angleHook -= 1;
+        }
+    }
+}
+
 void Hook::render(SDL_Renderer* renderer) {
 
     // Vẽ dây câu
@@ -64,6 +77,9 @@ void Hook::render(SDL_Renderer* renderer) {
                       g_base.y + g_base.h - 100,
                       g_tip.x, g_tip.y);
 
+    SDL_Point rotationPoint = {1, 0};
+    SDL_Rect destRect = {g_tip.x - 2, g_tip.y, HOOK_WIDTH, HOOK_WIDTH};
+    g_textureManager->drawhook("hook", g_angleHook, destRect, rotationPoint,renderer);
 }
 
 void Hook::startExtend() {
