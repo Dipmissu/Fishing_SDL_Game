@@ -403,6 +403,8 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
+    g_sound->settingSound(g_soundVolume);
+    g_sound->settingMusic(g_musicVolume);
     if(g_ending == true) {
         g_numberEntity = 0;
         createMussel();
@@ -602,8 +604,6 @@ void Game::render() {
 
         g_box->render(g_renderer);
         g_hook->render(g_renderer);
-        //SDL_Point hookTip = g_hook->getTipPosition();
-        //g_textureManager->drawhook("hook", hookTip.x, hookTip.y, HOOK_WIDTH, HOOK_WIDTH,g_hook->isExtending(),g_pause,g_renderer);
 
         g_score->render(g_renderer);
         g_time->render(g_renderer);
@@ -611,7 +611,7 @@ void Game::render() {
         if(g_box->isCollected()) {
             // hiển thị note
             SDL_Color note = {0,0,0,0};
-            g_textRenderer->renderText("Press P to continue!!",note,g_screenWidth / 2 - 80, 435);
+            g_textRenderer->renderText("Press P to continue!!",note,g_screenWidth / 2 - 80, 440);
             g_pause = true;
             if(g_buff == "extratime") {
                 g_time->addTime(15*60);
@@ -630,8 +630,6 @@ void Game::render() {
 
         if(g_gameState == SETTING) {
             g_pause = true;
-            g_sound->settingSound(g_soundVolume);
-            g_sound->settingMusic(g_musicVolume);
             g_textureManager->draw("setting",160,200,480,320,g_renderer);
 
             // Âm thanh

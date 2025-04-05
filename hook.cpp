@@ -22,7 +22,7 @@ Hook::Hook(int x, int y, TextureManager* textureManager) :
     g_textureManager(textureManager) {
 
     g_base = {x, y, 120, 120};
-    g_tip = {x, y};
+    g_tip = {x , y + 50};
 }
 
 Hook::~Hook() {}

@@ -24,7 +24,6 @@ void Time::update(){
 
     if(g_timeLeft <= 0){
         g_timeLeft = 0;
-        //g_running = false;
     }
 }
 

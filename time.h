@@ -11,7 +11,6 @@ class Time{
 private:
     int g_timeLeft;
     int g_lastTime;
-    //bool g_running;
 
     TextureManager* g_textureManager;
     TextRenderer* g_textRenderer;
@@ -24,7 +23,6 @@ public:
     void reset();
     void addTime(int time);
     int getTime() const {return g_timeLeft;}
-    //bool isRunning() const {return g_running;}
 
 };
 
